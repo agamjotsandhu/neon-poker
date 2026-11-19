@@ -29,7 +29,16 @@ function noise(ac: AudioContext): AudioBuffer {
   return noiseBuf
 }
 
-function burst(ac: AudioContext, out: AudioNode, t: number, dur: number, freq: number, q: number, gain: number, type: BiquadFilterType = 'bandpass') {
+function burst(
+  ac: AudioContext,
+  out: AudioNode,
+  t: number,
+  dur: number,
+  freq: number,
+  q: number,
+  gain: number,
+  type: BiquadFilterType = 'bandpass',
+) {
   const src = ac.createBufferSource()
   src.buffer = noise(ac)
   const f = ac.createBiquadFilter()
@@ -45,7 +54,16 @@ function burst(ac: AudioContext, out: AudioNode, t: number, dur: number, freq: n
   src.stop(t + dur + 0.02)
 }
 
-function tone(ac: AudioContext, out: AudioNode, t: number, freq: number, dur: number, gain: number, type: OscillatorType = 'square', slideTo?: number) {
+function tone(
+  ac: AudioContext,
+  out: AudioNode,
+  t: number,
+  freq: number,
+  dur: number,
+  gain: number,
+  type: OscillatorType = 'square',
+  slideTo?: number,
+) {
   const o = ac.createOscillator()
   o.type = type
   o.frequency.setValueAtTime(freq, t)
@@ -81,7 +99,8 @@ export function play(name: SoundName, delaySec = 0) {
       burst(ac, out, t + 0.01, 0.05, 1800, 2, 0.12)
       break
     case 'shuffle':
-      for (let i = 0; i < 9; i++) burst(ac, out, t + i * 0.07, 0.05, 2600 + i * 90, 1.4, 0.12, 'highpass')
+      for (let i = 0; i < 9; i++)
+        burst(ac, out, t + i * 0.07, 0.05, 2600 + i * 90, 1.4, 0.12, 'highpass')
       break
     case 'flip':
       burst(ac, out, t, 0.09, 2400, 0.8, 0.18)

@@ -1,7 +1,8 @@
 import { RANK_NAMES, cardToString, rankOf, suitOf, type Card } from '../engine/cards'
 import { HandCategory, categoryOf, evaluate, tiebreak } from '../engine/evaluator'
 
-export type DrawKind = 'flush-draw' | 'oesd' | 'double-gutshot' | 'gutshot' | 'backdoor-flush' | 'overcards'
+export type DrawKind =
+  'flush-draw' | 'oesd' | 'double-gutshot' | 'gutshot' | 'backdoor-flush' | 'overcards'
 
 export interface Draw {
   kind: DrawKind
@@ -133,7 +134,15 @@ function labelFor(newScore: number, boardTop: number, heroRanks: number[]): stri
  * uses the hero's hole cards (so a card that only improves the board is not an out).
  */
 export function findOuts(hero: readonly Card[], board: readonly Card[]): OutsReport {
-  const empty: OutsReport = { outs: [], groups: [], draws: [], nextCard: 0, byRiver: null, ruleOf2: 0, ruleOf4: null }
+  const empty: OutsReport = {
+    outs: [],
+    groups: [],
+    draws: [],
+    nextCard: 0,
+    byRiver: null,
+    ruleOf2: 0,
+    ruleOf4: null,
+  }
   if (board.length < 3 || board.length >= 5) return empty
 
   const cur = evaluate([...hero, ...board])
@@ -159,12 +168,15 @@ export function findOuts(hero: readonly Card[], board: readonly Card[]): OutsRep
 
   const groupMap = new Map<string, number>()
   for (const o of outs) groupMap.set(o.makes, (groupMap.get(o.makes) ?? 0) + 1)
-  const groups = [...groupMap.entries()].map(([makes, count]) => ({ makes, count })).sort((a, b) => b.count - a.count)
+  const groups = [...groupMap.entries()]
+    .map(([makes, count]) => ({ makes, count }))
+    .sort((a, b) => b.count - a.count)
 
   const n = outs.length
   const left = 52 - hero.length - board.length
   const nextCard = n / left
-  const byRiver = board.length === 3 ? 1 - ((left - n) / left) * ((left - 1 - n) / (left - 1)) : null
+  const byRiver =
+    board.length === 3 ? 1 - ((left - n) / left) * ((left - 1 - n) / (left - 1)) : null
 
   return {
     outs,

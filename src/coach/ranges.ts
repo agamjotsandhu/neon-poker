@@ -105,7 +105,10 @@ export function combosOf(hc: HandClass, dead: ReadonlySet<Card> = new Set()): [C
   return out
 }
 
-export function rangeCombos(classes: Iterable<HandClass>, dead: ReadonlySet<Card> = new Set()): [Card, Card][] {
+export function rangeCombos(
+  classes: Iterable<HandClass>,
+  dead: ReadonlySet<Card> = new Set(),
+): [Card, Card][] {
   const out: [Card, Card][] = []
   for (const hc of classes) out.push(...combosOf(hc, dead))
   return out

@@ -3,7 +3,15 @@ import { useEffect, useRef, useState } from 'react'
 import { DUR, EASE } from '../motion'
 
 /** Tweens between numeric values (chip counts). */
-export function AnimatedNumber({ value, delay = 0, format = (n: number) => n.toLocaleString() }: { value: number; delay?: number; format?: (n: number) => string }) {
+export function AnimatedNumber({
+  value,
+  delay = 0,
+  format = (n: number) => n.toLocaleString(),
+}: {
+  value: number
+  delay?: number
+  format?: (n: number) => string
+}) {
   const [shown, setShown] = useState(value)
   const from = useRef(value)
   const reduce = useReducedMotion()

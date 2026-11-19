@@ -52,9 +52,15 @@ export function Modal({
           >
             {(title || onClose) && (
               <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="font-display text-2xl font-bold leading-tight text-haze-100 text-glow-pink">{title}</div>
+                <div className="font-display text-2xl font-bold leading-tight text-haze-100 text-glow-pink">
+                  {title}
+                </div>
                 {onClose && (
-                  <button onClick={onClose} className="rounded-pixel p-1.5 text-haze-300 hover:bg-night-700 hover:text-haze-100" aria-label="Close">
+                  <button
+                    onClick={onClose}
+                    className="rounded-pixel p-1.5 text-haze-300 hover:bg-night-700 hover:text-haze-100"
+                    aria-label="Close"
+                  >
                     <PixelIcon name="close" size={14} />
                   </button>
                 )}

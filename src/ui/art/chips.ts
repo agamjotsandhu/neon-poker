@@ -8,7 +8,12 @@ const DENOMS: { mult: number; color: string; stripe: string }[] = [
 ]
 
 /** Break an amount into chip colours (largest first), capped for display. */
-export function chipColumns(amount: number, bb: number, maxPerCol = 6, maxCols = 3): { color: string; stripe: string }[][] {
+export function chipColumns(
+  amount: number,
+  bb: number,
+  maxPerCol = 6,
+  maxCols = 3,
+): { color: string; stripe: string }[][] {
   const chips: { color: string; stripe: string }[] = []
   let left = amount
   for (const d of DENOMS) {
@@ -18,8 +23,10 @@ export function chipColumns(amount: number, bb: number, maxPerCol = 6, maxCols =
     left -= n * v
     while (n-- > 0) chips.push({ color: d.color, stripe: d.stripe })
   }
-  if (chips.length === 0 && amount > 0) chips.push({ color: DENOMS[4].color, stripe: DENOMS[4].stripe })
+  if (chips.length === 0 && amount > 0)
+    chips.push({ color: DENOMS[4].color, stripe: DENOMS[4].stripe })
   const cols: { color: string; stripe: string }[][] = []
-  for (let i = 0; i < chips.length && cols.length < maxCols; i += maxPerCol) cols.push(chips.slice(i, i + maxPerCol))
+  for (let i = 0; i < chips.length && cols.length < maxCols; i += maxPerCol)
+    cols.push(chips.slice(i, i + maxPerCol))
   return cols
 }

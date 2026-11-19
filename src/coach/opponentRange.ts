@@ -1,6 +1,13 @@
 import { rankOf, suitOf, type Card } from '../engine/cards'
 import { HandCategory, categoryOf, evaluate } from '../engine/evaluator'
-import { rangeCombos, rangeFraction, rfiRange, topRange, type HandClass, type Position } from './ranges'
+import {
+  rangeCombos,
+  rangeFraction,
+  rfiRange,
+  topRange,
+  type HandClass,
+  type Position,
+} from './ranges'
 import type { OpponentInfo } from './situation'
 
 export interface EstimatedRange {
@@ -37,7 +44,8 @@ export function connects(hole: readonly Card[], board: readonly Card[]): boolean
   if (cat > boardCat && cat >= HandCategory.Pair) return true
   if (board.length < 5) {
     for (let s = 0; s < 4; s++) {
-      if (all.filter((c) => suitOf(c) === s).length >= 4 && hole.some((c) => suitOf(c) === s)) return true
+      if (all.filter((c) => suitOf(c) === s).length >= 4 && hole.some((c) => suitOf(c) === s))
+        return true
     }
     let mask = 0
     for (const c of all) mask |= 1 << rankOf(c)
@@ -51,7 +59,11 @@ export function connects(hole: readonly Card[], board: readonly Card[]): boolean
 }
 
 /** Heuristic range for an opponent, from their preflop role and postflop aggression. */
-export function estimateRange(o: OpponentInfo, dead: ReadonlySet<Card>, board: readonly Card[]): EstimatedRange {
+export function estimateRange(
+  o: OpponentInfo,
+  dead: ReadonlySet<Card>,
+  board: readonly Card[],
+): EstimatedRange {
   const { classes, why } = preflopClasses(o)
   const width = rangeFraction(classes)
   let combos = rangeCombos(classes, dead)

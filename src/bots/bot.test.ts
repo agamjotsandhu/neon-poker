@@ -27,7 +27,8 @@ function playHand(state: GameState, seed: number, vpip: Map<string, number>) {
     const p = s.players[s.toAct]
     const me = PERSONALITIES.find((x) => x.id === p.id)!
     const { action } = decideBot(s, s.toAct, me, rng)
-    if (s.street === 'preflop' && action.type !== 'fold' && action.type !== 'check') voluntarily.add(p.id)
+    if (s.street === 'preflop' && action.type !== 'fold' && action.type !== 'check')
+      voluntarily.add(p.id)
     s = applyAction(s, action)
   }
   for (const id of voluntarily) vpip.set(id, (vpip.get(id) ?? 0) + 1)

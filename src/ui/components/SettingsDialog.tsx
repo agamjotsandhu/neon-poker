@@ -16,7 +16,17 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
   )
 }
 
-function Segmented<T extends string | number>({ value, options, onChange, label }: { value: T; options: { v: T; label: string }[]; onChange: (v: T) => void; label: string }) {
+function Segmented<T extends string | number>({
+  value,
+  options,
+  onChange,
+  label,
+}: {
+  value: T
+  options: { v: T; label: string }[]
+  onChange: (v: T) => void
+  label: string
+}) {
   return (
     <div className="flex flex-wrap gap-1" role="radiogroup" aria-label={label}>
       {options.map((o) => (
@@ -28,7 +38,9 @@ function Segmented<T extends string | number>({ value, options, onChange, label 
           className={clsx(
             'min-w-10 rounded-pixel px-2.5 py-1.5 text-xs ring-1 transition',
             /^\d/.test(o.label) ? 'num' : 'font-display',
-            value === o.v ? 'bg-neon-pink text-night-950 ring-neon-pink' : 'bg-night-800 text-haze-200 ring-haze-400/25 hover:bg-night-700',
+            value === o.v
+              ? 'bg-neon-pink text-night-950 ring-neon-pink'
+              : 'bg-night-800 text-haze-200 ring-haze-400/25 hover:bg-night-700',
           )}
         >
           {o.label}
@@ -51,7 +63,12 @@ export function SettingsDialog({ inGame }: { inGame?: boolean }) {
     <Modal open={open} onClose={() => setOpen(false)} title="Settings">
       <div className="divide-y divide-haze-400/10">
         <Row label="Opponents" hint="Bots at the table">
-          <Segmented label="Opponents" value={settings.bots} options={[1, 2, 3, 4, 5].map((v) => ({ v, label: String(v) }))} onChange={(bots) => update({ bots })} />
+          <Segmented
+            label="Opponents"
+            value={settings.bots}
+            options={[1, 2, 3, 4, 5].map((v) => ({ v, label: String(v) }))}
+            onChange={(bots) => update({ bots })}
+          />
         </Row>
         <Row label="Starting stack" hint="In big blinds">
           <Segmented
@@ -82,13 +99,27 @@ export function SettingsDialog({ inGame }: { inGame?: boolean }) {
           />
         </Row>
         <Row label="Sound" hint="Synthesised chiptune effects">
-          <Segmented label="Sound" value={settings.sound ? 'on' : 'off'} options={[{ v: 'on', label: 'On' }, { v: 'off', label: 'Off' }]} onChange={(v) => update({ sound: v === 'on' })} />
+          <Segmented
+            label="Sound"
+            value={settings.sound ? 'on' : 'off'}
+            options={[
+              { v: 'on', label: 'On' },
+              { v: 'off', label: 'Off' },
+            ]}
+            onChange={(v) => update({ sound: v === 'on' })}
+          />
         </Row>
-        <Row label="Coaching" hint="Coach: advice before you act. Quiz: act first, then get graded.">
+        <Row
+          label="Coaching"
+          hint="Coach: advice before you act. Quiz: act first, then get graded."
+        >
           <ModeToggle mode={settings.mode} onChange={(mode) => update({ mode })} />
         </Row>
         <Row label="Session stats" hint="Saved on this device">
-          <button onClick={resetStats} className="rounded-pixel bg-night-800 px-3 py-1.5 font-display text-xs text-neon-red ring-1 ring-neon-red/40 hover:bg-night-700">
+          <button
+            onClick={resetStats}
+            className="rounded-pixel bg-night-800 px-3 py-1.5 font-display text-xs text-neon-red ring-1 ring-neon-red/40 hover:bg-night-700"
+          >
             RESET STATS
           </button>
         </Row>

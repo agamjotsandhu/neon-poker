@@ -35,7 +35,10 @@ export const SEAT_MAP: Record<number, number[]> = {
   6: [0, 1, 2, 3, 4, 5],
 }
 
-const lerp = (a: Pt, b: Pt, t: number): Pt => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t })
+const lerp = (a: Pt, b: Pt, t: number): Pt => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+})
 
 export function computeGeometry(w: number, h: number): Geometry {
   const portrait = h > w * 1.05
@@ -81,7 +84,10 @@ export function computeGeometry(w: number, h: number): Geometry {
 
   const boardY = portrait ? ty + th * 0.47 : ty + th * 0.47
   const gap = cardW * 0.14
-  const board = Array.from({ length: 5 }, (_, i) => ({ x: cx + (i - 2) * (cardW + gap), y: boardY }))
+  const board = Array.from({ length: 5 }, (_, i) => ({
+    x: cx + (i - 2) * (cardW + gap),
+    y: boardY,
+  }))
   const potLabel = { x: cx, y: boardY - cardW * 1.4 * 0.5 - (portrait ? 30 : 34) }
   const pot = { x: cx + (portrait ? 0 : 0), y: potLabel.y - (portrait ? 26 : 30) }
 
@@ -102,11 +108,16 @@ export function computeGeometry(w: number, h: number): Geometry {
     if (portrait && i !== 0 && i !== 3) {
       // Tuck beside (upper seats) or above (lower seats) the avatar so they never cover the board or hero cards
       const dir = s.x < cx ? 1 : -1
-      if (i === 2 || i === 4) return { x: s.x + dir * (avatar * 0.5 + botCardW * 0.95), y: s.y - avatar * 0.62 }
+      if (i === 2 || i === 4)
+        return { x: s.x + dir * (avatar * 0.5 + botCardW * 0.95), y: s.y - avatar * 0.62 }
       return { x: s.x + dir * avatar * 0.25, y: s.y - avatar * 1.55 }
     }
     const off = portrait ? botCardW * 1.45 : botCardW * 2.05
-    if (i === 3) return { x: s.x + (portrait ? botCardW * 1.6 : botCardW * 2.2), y: s.y + (portrait ? 18 : 22) }
+    if (i === 3)
+      return {
+        x: s.x + (portrait ? botCardW * 1.6 : botCardW * 2.2),
+        y: s.y + (portrait ? 18 : 22),
+      }
     if (i === 0) return heroCards[0]
     const dir = s.x < cx ? 1 : -1
     return { x: s.x + dir * off, y: s.y + (portrait ? 30 : 4) }

@@ -30,7 +30,9 @@ describe('game store integration', () => {
 
   it('plays several full hands, grading the hero and keeping chips constant', async () => {
     useGame.getState().startGame()
-    const total = () => useGame.getState().game!.players.reduce((t, p) => t + p.stack + p.bet, 0) + useGame.getState().game!.pot
+    const total = () =>
+      useGame.getState().game!.players.reduce((t, p) => t + p.stack + p.bet, 0) +
+      useGame.getState().game!.pot
     const start = total()
     expect(useGame.getState().screen).toBe('game')
 

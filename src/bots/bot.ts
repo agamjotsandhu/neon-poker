@@ -24,7 +24,8 @@ function sized(legal: LegalActions, to: number, unit: number): Action {
   return { type: legal.isOpen ? 'bet' : 'raise', amount }
 }
 
-const passive = (legal: LegalActions): Action => (legal.canCheck ? { type: 'check' } : { type: 'fold' })
+const passive = (legal: LegalActions): Action =>
+  legal.canCheck ? { type: 'check' } : { type: 'fold' }
 const call = (legal: LegalActions): Action => (legal.canCall ? { type: 'call' } : { type: 'check' })
 
 export interface BotDecision {
@@ -50,13 +51,22 @@ export function decideBot(state: GameState, idx: number, me: Personality, rng: R
     if (facing === 'unopened' || facing === 'limped') {
       if (top <= playable) {
         const raiseIt = legal.canRaise && (roll < me.aggression + 0.2 || top < 0.06)
-        if (raiseIt) return { action: sized(legal, bb * (2.5 + sit.preflop.limpers + (rng() < 0.3 ? 0.5 : 0)), unit), difficulty: 0.3 }
+        if (raiseIt)
+          return {
+            action: sized(legal, bb * (2.5 + sit.preflop.limpers + (rng() < 0.3 ? 0.5 : 0)), unit),
+            difficulty: 0.3,
+          }
         return { action: call(legal), difficulty: 0.3 }
       }
       if (legal.canCheck) return { action: { type: 'check' }, difficulty: 0.1 }
-      if (legal.canRaise && roll < me.bluff * 0.4 && (sit.position === 'BTN' || sit.position === 'CO'))
+      if (
+        legal.canRaise &&
+        roll < me.bluff * 0.4 &&
+        (sit.position === 'BTN' || sit.position === 'CO')
+      )
         return { action: sized(legal, bb * 2.5, unit), difficulty: 0.5 }
-      if (sit.position === 'SB' && top <= playable * 1.4 && me.aggression < 0.3) return { action: call(legal), difficulty: 0.3 }
+      if (sit.position === 'SB' && top <= playable * 1.4 && me.aggression < 0.3)
+        return { action: call(legal), difficulty: 0.3 }
       return { action: { type: 'fold' }, difficulty: 0.1 }
     }
 
@@ -64,13 +74,17 @@ export function decideBot(state: GameState, idx: number, me: Personality, rng: R
     if (facing === 'raised') {
       const threeBet = 0.035 + me.looseness * 0.12 * (me.aggression + 0.3)
       const cont = me.looseness * 0.6 + me.stickiness + (sit.position === 'BB' ? 0.12 : 0)
-      if (top <= threeBet && legal.canRaise) return { action: sized(legal, sit.preflop.lastRaiseTo * 3, unit), difficulty: 0.6 }
-      if (top <= cont || (priceGood && top <= cont * 1.5)) return { action: call(legal), difficulty: 0.5 }
+      if (top <= threeBet && legal.canRaise)
+        return { action: sized(legal, sit.preflop.lastRaiseTo * 3, unit), difficulty: 0.6 }
+      if (top <= cont || (priceGood && top <= cont * 1.5))
+        return { action: call(legal), difficulty: 0.5 }
       return { action: passive(legal), difficulty: 0.4 }
     }
     // 3-bet or more
-    if (top <= 0.025 + me.aggression * 0.01 && legal.canRaise) return { action: sized(legal, sit.preflop.lastRaiseTo * 2.4, unit), difficulty: 0.8 }
-    if (top <= 0.06 + me.stickiness + (priceGood ? 0.04 : 0)) return { action: call(legal), difficulty: 0.8 }
+    if (top <= 0.025 + me.aggression * 0.01 && legal.canRaise)
+      return { action: sized(legal, sit.preflop.lastRaiseTo * 2.4, unit), difficulty: 0.8 }
+    if (top <= 0.06 + me.stickiness + (priceGood ? 0.04 : 0))
+      return { action: call(legal), difficulty: 0.8 }
     return { action: passive(legal), difficulty: 0.6 }
   }
 
@@ -86,9 +100,11 @@ export function decideBot(state: GameState, idx: number, me: Personality, rng: R
       const frac = 0.45 + rng() * 0.35
       return { action: sized(legal, sit.pot * frac, unit), difficulty: 0.5 }
     }
-    if (drawy && legal.canRaise && roll < me.aggression * 0.8) return { action: sized(legal, sit.pot * 0.5, unit), difficulty: 0.6 }
+    if (drawy && legal.canRaise && roll < me.aggression * 0.8)
+      return { action: sized(legal, sit.pot * 0.5, unit), difficulty: 0.6 }
     const cbet = sit.heroHasInitiative && sit.opponents.length === 1 && roll < me.aggression * 0.6
-    if ((cbet || roll < me.bluff) && legal.canRaise) return { action: sized(legal, sit.pot * (0.33 + rng() * 0.25), unit), difficulty: 0.7 }
+    if ((cbet || roll < me.bluff) && legal.canRaise)
+      return { action: sized(legal, sit.pot * (0.33 + rng() * 0.25), unit), difficulty: 0.7 }
     return { action: { type: 'check' }, difficulty: 0.3 }
   }
 

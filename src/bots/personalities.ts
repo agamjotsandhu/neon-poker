@@ -81,6 +81,12 @@ export const PERSONALITIES: Personality[] = [
   },
 ]
 
-export const HUMAN_AVATAR: AvatarSpec = { skin: 2, hair: 'red', style: 'hood', accessory: 'visor', outfit: 'cyan' }
+export const HUMAN_AVATAR: AvatarSpec = {
+  skin: 2,
+  hair: 'red',
+  style: 'hood',
+  accessory: 'visor',
+  outfit: 'cyan',
+}
 
 export const personalityById = (id: string) => PERSONALITIES.find((p) => p.id === id)

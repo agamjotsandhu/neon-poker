@@ -12,18 +12,50 @@ const Chip = ({ color, stripe, y }: { color: string; stripe: string; y: number }
     <rect x="4" y="4" width="3" height="4" fill={token(stripe)} opacity="0.8" />
     <rect x="15" y="4" width="3" height="4" fill={token(stripe)} opacity="0.8" />
     <ellipse cx="11" cy="4" rx="10" ry="3.6" fill={token(color)} />
-    <ellipse cx="11" cy="4" rx="6.5" ry="2.2" fill="none" stroke={token(stripe)} strokeWidth="1.1" strokeDasharray="2 1.6" />
-    <ellipse cx="11" cy="4" rx="10" ry="3.6" fill="none" stroke={token('night-950')} strokeOpacity="0.5" strokeWidth="0.6" />
+    <ellipse
+      cx="11"
+      cy="4"
+      rx="6.5"
+      ry="2.2"
+      fill="none"
+      stroke={token(stripe)}
+      strokeWidth="1.1"
+      strokeDasharray="2 1.6"
+    />
+    <ellipse
+      cx="11"
+      cy="4"
+      rx="10"
+      ry="3.6"
+      fill="none"
+      stroke={token('night-950')}
+      strokeOpacity="0.5"
+      strokeWidth="0.6"
+    />
   </g>
 )
 
-export const ChipPile = memo(function ChipPile({ amount, bb, scale = 1 }: { amount: number; bb: number; scale?: number }) {
+export const ChipPile = memo(function ChipPile({
+  amount,
+  bb,
+  scale = 1,
+}: {
+  amount: number
+  bb: number
+  scale?: number
+}) {
   const cols = chipColumns(amount, bb)
   const tallest = Math.max(1, ...cols.map((c) => c.length))
   const height = 9 + (tallest - 1) * 3
   const width = cols.length * 22 + (cols.length - 1) * 2
   return (
-    <svg width={width * scale} height={height * scale} viewBox={`0 0 ${width} ${height}`} aria-hidden className="block overflow-visible">
+    <svg
+      width={width * scale}
+      height={height * scale}
+      viewBox={`0 0 ${width} ${height}`}
+      aria-hidden
+      className="block overflow-visible"
+    >
       {cols.map((col, ci) => (
         <g key={ci} transform={`translate(${ci * 24} 0)`}>
           {col.map((c, i) => (
@@ -36,7 +68,21 @@ export const ChipPile = memo(function ChipPile({ amount, bb, scale = 1 }: { amou
 })
 
 /** Chips + amount label. */
-export function ChipStack({ amount, bb, label, className, scale = 1, labelClassName }: { amount: number; bb: number; label?: string; className?: string; scale?: number; labelClassName?: string }) {
+export function ChipStack({
+  amount,
+  bb,
+  label,
+  className,
+  scale = 1,
+  labelClassName,
+}: {
+  amount: number
+  bb: number
+  label?: string
+  className?: string
+  scale?: number
+  labelClassName?: string
+}) {
   return (
     <div className={clsx('flex flex-col items-center gap-1', className)}>
       <ChipPile amount={amount} bb={bb} scale={scale} />

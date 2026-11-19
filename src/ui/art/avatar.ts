@@ -10,7 +10,12 @@ const OUTFITS: Record<AvatarSpec['outfit'], [string, string]> = {
   lime: ['chip-green', 'neon-lime'],
 }
 
-const SKIN_SHADE: Record<number, string> = { 1: 'skin-2', 2: 'skin-3', 3: 'skin-4', 4: 'hair-black' }
+const SKIN_SHADE: Record<number, string> = {
+  1: 'skin-2',
+  2: 'skin-3',
+  3: 'skin-4',
+  4: 'hair-black',
+}
 
 /** Builds a 16×16 pixel portrait from a spec. Each cell is a theme token name or null. */
 export function buildAvatar(spec: AvatarSpec): Grid {

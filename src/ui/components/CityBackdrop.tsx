@@ -7,7 +7,9 @@ export function CityBackdrop({ dim = 0 }: { dim?: number }) {
   const baseRef = useRef<HTMLCanvasElement>(null)
   const fxRef = useRef<HTMLCanvasElement>(null)
   const reduce = useReducedMotion()
-  const [portrait, setPortrait] = useState(() => typeof window !== 'undefined' && window.innerHeight > window.innerWidth * 1.05)
+  const [portrait, setPortrait] = useState(
+    () => typeof window !== 'undefined' && window.innerHeight > window.innerWidth * 1.05,
+  )
 
   useEffect(() => {
     const onResize = () => setPortrait(window.innerHeight > window.innerWidth * 1.05)
@@ -47,7 +49,10 @@ export function CityBackdrop({ dim = 0 }: { dim?: number }) {
   }, [portrait, reduce])
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-night-950" aria-hidden>
+    <div
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-night-950"
+      aria-hidden
+    >
       <canvas ref={baseRef} className="pixelated absolute inset-0 h-full w-full object-cover" />
       <canvas ref={fxRef} className="pixelated absolute inset-0 h-full w-full object-cover" />
       {/* vignette + scanlines */}

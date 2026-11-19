@@ -26,10 +26,23 @@ function runsFor(spec: AvatarSpec) {
 }
 
 /** Original procedural pixel-art portrait. */
-export const PixelAvatar = memo(function PixelAvatar({ spec, size }: { spec: AvatarSpec; size: number }) {
+export const PixelAvatar = memo(function PixelAvatar({
+  spec,
+  size,
+}: {
+  spec: AvatarSpec
+  size: number
+}) {
   const runs = runsFor(spec)
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden className="block">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      shapeRendering="crispEdges"
+      aria-hidden
+      className="block"
+    >
       {runs.map((r, i) => (
         <rect key={i} x={r.x} y={r.y} width={r.w} height={1} fill={token(r.c)} />
       ))}

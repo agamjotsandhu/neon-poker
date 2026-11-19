@@ -40,7 +40,13 @@ describe('art helpers', () => {
     expect(chipColumns(10_000_000, 1).flat().length).toBeLessThanOrEqual(18)
   })
   it('builds a 16×16 avatar', () => {
-    const g = buildAvatar({ skin: 1, hair: 'pink', style: 'mohawk', accessory: 'shades', outfit: 'cyan' })
+    const g = buildAvatar({
+      skin: 1,
+      hair: 'pink',
+      style: 'mohawk',
+      accessory: 'shades',
+      outfit: 'cyan',
+    })
     expect(g).toHaveLength(16)
     expect(g.every((r) => r.length === 16)).toBe(true)
   })

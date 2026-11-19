@@ -56,7 +56,10 @@ async function passiveAct(page: Page) {
 
 async function run() {
   mkdirSync(OUT, { recursive: true })
-  const server = spawn('npx', ['vite', '--port', String(PORT), '--strictPort'], { stdio: 'ignore', shell: process.platform === 'win32' })
+  const server = spawn('npx', ['vite', '--port', String(PORT), '--strictPort'], {
+    stdio: 'ignore',
+    shell: process.platform === 'win32',
+  })
   const errors: string[] = []
   try {
     await waitForServer(BASE)
@@ -72,7 +75,14 @@ async function run() {
         try {
           localStorage.setItem(
             'neon-holdem:settings',
-            JSON.stringify({ bots: 5, startingStackBB: 100, blindsIndex: 1, speed: 'fast', sound: false, mode: 'coach' }),
+            JSON.stringify({
+              bots: 5,
+              startingStackBB: 100,
+              blindsIndex: 1,
+              speed: 'fast',
+              sound: false,
+              mode: 'coach',
+            }),
           )
         } catch {
           /* ignore */
@@ -140,8 +150,14 @@ async function run() {
           await shot('6-summary')
         }
         // next hand
-        await waitFor(async () => (await page.getByRole('button', { name: /DEAL NEXT HAND/ }).count()) > 0, 8000)
-        await page.getByRole('button', { name: /DEAL NEXT HAND/ }).click().catch(() => undefined)
+        await waitFor(
+          async () => (await page.getByRole('button', { name: /DEAL NEXT HAND/ }).count()) > 0,
+          8000,
+        )
+        await page
+          .getByRole('button', { name: /DEAL NEXT HAND/ })
+          .click()
+          .catch(() => undefined)
       }
       if (!gotShowdown) errors.push(`[${vp.name}] never reached a showdown`)
       await ctx.close()

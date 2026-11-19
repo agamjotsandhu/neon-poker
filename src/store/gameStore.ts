@@ -1,6 +1,11 @@
 import { create } from 'zustand'
 import { decideBot, thinkTime } from '../bots/bot'
-import { HUMAN_AVATAR, PERSONALITIES, type AvatarSpec, type Personality } from '../bots/personalities'
+import {
+  HUMAN_AVATAR,
+  PERSONALITIES,
+  type AvatarSpec,
+  type Personality,
+} from '../bots/personalities'
 import { getAdvice, type Advice } from '../coach/advice'
 import { prepareEquityJob } from '../coach/analysis'
 import { monteCarloEquity, type EquityResult } from '../coach/equity'
@@ -9,13 +14,7 @@ import { describeHand, type StrengthInfo } from '../coach/describe'
 import { gradeDecision, type Feedback } from '../coach/grade'
 import { findOuts, type OutsReport } from '../coach/outs'
 import { buildSituation, type Situation } from '../coach/situation'
-import {
-  advanceStreet,
-  applyAction,
-  createGame,
-  getLegalActions,
-  startHand,
-} from '../engine/game'
+import { advanceStreet, applyAction, createGame, getLegalActions, startHand } from '../engine/game'
 import { createRng, freshSeed } from '../engine/rng'
 import type { Action, ActionType, GameState } from '../engine/types'
 import { PACE } from '../ui/motion'
@@ -229,21 +228,24 @@ export const useGame = create<Store>((set, get) => {
     const me = get().personalities[p.id]
     const decision = decideBot(g, g.toAct, me, botRng)
     set({ thinkingId: p.id })
-    schedule(() => {
-      const cur = get().game
-      if (!cur || cur.phase !== 'betting' || cur.players[cur.toAct]?.id !== p.id) return
-      let next: GameState
-      try {
-        next = applyAction(cur, decision.action)
-      } catch {
-        const legal = getLegalActions(cur)
-        next = applyAction(cur, legal.canCheck ? { type: 'check' } : { type: 'fold' })
-      }
-      soundForAction(next.players[cur.toAct].lastAction?.type ?? 'check')
-      set({ thinkingId: null })
-      pushSnapshot(next)
-      schedule(proceed, PACE.afterAction / speed())
-    }, thinkTime(decision.difficulty, botRng, speed()))
+    schedule(
+      () => {
+        const cur = get().game
+        if (!cur || cur.phase !== 'betting' || cur.players[cur.toAct]?.id !== p.id) return
+        let next: GameState
+        try {
+          next = applyAction(cur, decision.action)
+        } catch {
+          const legal = getLegalActions(cur)
+          next = applyAction(cur, legal.canCheck ? { type: 'check' } : { type: 'fold' })
+        }
+        soundForAction(next.players[cur.toAct].lastAction?.type ?? 'check')
+        set({ thinkingId: null })
+        pushSnapshot(next)
+        schedule(proceed, PACE.afterAction / speed())
+      },
+      thinkTime(decision.difficulty, botRng, speed()),
+    )
   }
 
   function beginHeroTurn(g: GameState) {
@@ -366,14 +368,30 @@ export const useGame = create<Store>((set, get) => {
     startGame: () => {
       clearTimers()
       const game = newTable()
-      set({ game, screen: 'game', lastHand: null, feedback: null, summaryOpen: false, replay: null })
+      set({
+        game,
+        screen: 'game',
+        lastHand: null,
+        feedback: null,
+        summaryOpen: false,
+        replay: null,
+      })
       get().dealNextHand()
     },
 
     leaveGame: () => {
       clearTimers()
       if (replayTimer) clearInterval(replayTimer)
-      set({ screen: 'landing', game: null, heroTurn: false, thinkingId: null, coach: null, summaryOpen: false, replay: null, historyOpen: false })
+      set({
+        screen: 'landing',
+        game: null,
+        heroTurn: false,
+        thinkingId: null,
+        coach: null,
+        summaryOpen: false,
+        replay: null,
+        historyOpen: false,
+      })
     },
 
     rebuy: () => {

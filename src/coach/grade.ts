@@ -49,13 +49,20 @@ export function gradeDecision(
       grade: 'blunder',
       points: 0,
       title: 'Never fold when you can check',
-      message: 'Checking was free. Folding gave up your share of the pot for nothing — always check instead.',
+      message:
+        'Checking was free. Folding gave up your share of the pot for nothing — always check instead.',
     }
   }
 
   if (tookFamily === advFamily) {
     // Shoving a deep stack when a normal raise was the plan risks everything to win little.
-    if (took === 'allin' && advice.action !== 'allin' && advice.amount && opts.amount && opts.amount > advice.amount * 4) {
+    if (
+      took === 'allin' &&
+      advice.action !== 'allin' &&
+      advice.amount &&
+      opts.amount &&
+      opts.amount > advice.amount * 4
+    ) {
       return {
         ...base,
         grade: 'mistake',
@@ -66,10 +73,18 @@ export function gradeDecision(
     }
     // Sizing nudge for aggressive actions
     let sizing = ''
-    if (advFamily === 'aggressive' && advice.amount && opts.amount && advice.action !== 'allin' && took !== 'allin') {
+    if (
+      advFamily === 'aggressive' &&
+      advice.amount &&
+      opts.amount &&
+      advice.action !== 'allin' &&
+      took !== 'allin'
+    ) {
       const ratio = opts.amount / advice.amount
-      if (ratio > 1.8) sizing = ' Your size was a lot bigger than needed — the same result for more risk.'
-      else if (ratio < 0.55) sizing = ' Your size was quite small; a bigger bet gets more value and charges draws.'
+      if (ratio > 1.8)
+        sizing = ' Your size was a lot bigger than needed — the same result for more risk.'
+      else if (ratio < 0.55)
+        sizing = ' Your size was quite small; a bigger bet gets more value and charges draws.'
     }
     return {
       ...base,
@@ -102,7 +117,10 @@ export function gradeDecision(
   const blunder =
     (advFamily === 'aggressive' && tookFamily === 'fold') ||
     (advFamily === 'fold' && took === 'allin') ||
-    (advice.equity !== undefined && advice.required !== undefined && tookFamily !== 'fold' && advice.equity < advice.required - 0.2)
+    (advice.equity !== undefined &&
+      advice.required !== undefined &&
+      tookFamily !== 'fold' &&
+      advice.equity < advice.required - 0.2)
   return {
     ...base,
     grade: blunder ? 'blunder' : 'mistake',

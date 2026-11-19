@@ -86,7 +86,12 @@ describe('ranges', () => {
 
 describe('Monte Carlo equity', () => {
   it('AA vs KK preflop ≈ 82%', () => {
-    const r = monteCarloEquity({ hero: c('AsAh'), board: [], opponents: [combosOf('KK', new Set(c('AsAh')))], iterations: 6000 })
+    const r = monteCarloEquity({
+      hero: c('AsAh'),
+      board: [],
+      opponents: [combosOf('KK', new Set(c('AsAh')))],
+      iterations: 6000,
+    })
     expect(r.equity).toBeGreaterThan(0.78)
     expect(r.equity).toBeLessThan(0.86)
   })
@@ -97,11 +102,21 @@ describe('Monte Carlo equity', () => {
   })
   it('equity drops multiway', () => {
     const one = monteCarloEquity({ hero: c('AsKd'), board: [], opponents: [[]], iterations: 3000 })
-    const three = monteCarloEquity({ hero: c('AsKd'), board: [], opponents: [[], [], []], iterations: 3000 })
+    const three = monteCarloEquity({
+      hero: c('AsKd'),
+      board: [],
+      opponents: [[], [], []],
+      iterations: 3000,
+    })
     expect(three.equity).toBeLessThan(one.equity - 0.15)
   })
   it('the nuts on the river is 100%; a dead hand is 0%', () => {
-    const nuts = monteCarloEquity({ hero: c('AsKs'), board: c('QsJsTs2d3c'), opponents: [[]], iterations: 500 })
+    const nuts = monteCarloEquity({
+      hero: c('AsKs'),
+      board: c('QsJsTs2d3c'),
+      opponents: [[]],
+      iterations: 500,
+    })
     expect(nuts.equity).toBe(1)
     const dead = monteCarloEquity({
       hero: c('2c3d'),
@@ -122,8 +137,20 @@ describe('Monte Carlo equity', () => {
     expect(r.equity).toBeCloseTo(0.5)
   })
   it('is reproducible with a seed', () => {
-    const a = monteCarloEquity({ hero: c('9s8s'), board: c('7s6d2c'), opponents: [[]], iterations: 1000, seed: 3 })
-    const b = monteCarloEquity({ hero: c('9s8s'), board: c('7s6d2c'), opponents: [[]], iterations: 1000, seed: 3 })
+    const a = monteCarloEquity({
+      hero: c('9s8s'),
+      board: c('7s6d2c'),
+      opponents: [[]],
+      iterations: 1000,
+      seed: 3,
+    })
+    const b = monteCarloEquity({
+      hero: c('9s8s'),
+      board: c('7s6d2c'),
+      opponents: [[]],
+      iterations: 1000,
+      seed: 3,
+    })
     expect(a).toEqual(b)
   })
 })
@@ -189,7 +216,9 @@ describe('describe', () => {
     expect(describePreflop(c('AsAh')).percentileLabel).toBe('Top 1% of starting hands')
   })
   it('top pair with kicker', () => {
-    expect(describePostflop(c('QsAd'), c('Qh7c2d')).sentence).toBe('You have a pair of Queens (top pair) with an Ace kicker')
+    expect(describePostflop(c('QsAd'), c('Qh7c2d')).sentence).toBe(
+      'You have a pair of Queens (top pair) with an Ace kicker',
+    )
   })
   it('overpair, set, board pair', () => {
     expect(describePostflop(c('KsKd'), c('Qh7c2d')).short).toBe('Overpair')
@@ -263,7 +292,14 @@ const situation = (over: Partial<Situation>): Situation => ({
     },
   ],
   playersDealt: 6,
-  preflop: { facing: 'unopened', raises: 0, limpers: 0, openerPosition: null, lastRaiseTo: 10, heroRaised: false },
+  preflop: {
+    facing: 'unopened',
+    raises: 0,
+    limpers: 0,
+    openerPosition: null,
+    lastRaiseTo: 10,
+    heroRaised: false,
+  },
   inPosition: false,
   heroHasInitiative: false,
   effectiveStackBB: 100,
@@ -285,28 +321,76 @@ describe('advice: preflop', () => {
     expect(getAdvice(situation({ hero: c('Kc8d'), position: 'BTN' }), null)!.action).toBe('raise')
   })
   it('checks the big blind for free instead of folding', () => {
-    const a = getAdvice(situation({ hero: c('7c2d'), position: 'BB', toCall: 0, canCheck: true, preflop: { facing: 'limped', raises: 0, limpers: 2, openerPosition: null, lastRaiseTo: 10, heroRaised: false } }), null)!
+    const a = getAdvice(
+      situation({
+        hero: c('7c2d'),
+        position: 'BB',
+        toCall: 0,
+        canCheck: true,
+        preflop: {
+          facing: 'limped',
+          raises: 0,
+          limpers: 2,
+          openerPosition: null,
+          lastRaiseTo: 10,
+          heroRaised: false,
+        },
+      }),
+      null,
+    )!
     expect(a.action).toBe('check')
   })
   it('3-bets value vs a raise and folds junk', () => {
-    const facing = { facing: 'raised' as const, raises: 1, limpers: 0, openerPosition: 'CO', lastRaiseTo: 25, heroRaised: false }
+    const facing = {
+      facing: 'raised' as const,
+      raises: 1,
+      limpers: 0,
+      openerPosition: 'CO',
+      lastRaiseTo: 25,
+      heroRaised: false,
+    }
     const val = getAdvice(situation({ position: 'BTN', toCall: 25, preflop: facing }), null)!
     expect(val.action).toBe('raise')
     expect(val.amount).toBe(75)
-    expect(getAdvice(situation({ hero: c('Jc4d'), position: 'BTN', toCall: 25, preflop: facing }), null)!.action).toBe('fold')
+    expect(
+      getAdvice(situation({ hero: c('Jc4d'), position: 'BTN', toCall: 25, preflop: facing }), null)!
+        .action,
+    ).toBe('fold')
   })
   it('defends the big blind wide', () => {
-    const facing = { facing: 'raised' as const, raises: 1, limpers: 0, openerPosition: 'BTN', lastRaiseTo: 25, heroRaised: false }
-    const a = getAdvice(situation({ hero: c('Qs8s'), position: 'BB', toCall: 15, pot: 40, preflop: facing }), null)!
+    const facing = {
+      facing: 'raised' as const,
+      raises: 1,
+      limpers: 0,
+      openerPosition: 'BTN',
+      lastRaiseTo: 25,
+      heroRaised: false,
+    }
+    const a = getAdvice(
+      situation({ hero: c('Qs8s'), position: 'BB', toCall: 15, pot: 40, preflop: facing }),
+      null,
+    )!
     expect(a.action).toBe('call')
   })
   it('pushes short stacks', () => {
-    const a = getAdvice(situation({ hero: c('AsTd'), position: 'BTN', effectiveStackBB: 9, maxRaiseTo: 90 }), null)!
+    const a = getAdvice(
+      situation({ hero: c('AsTd'), position: 'BTN', effectiveStackBB: 9, maxRaiseTo: 90 }),
+      null,
+    )!
     expect(a.action).toBe('allin')
   })
   it('stacks off with aces vs a 4-bet', () => {
-    const facing = { facing: '4bet+' as const, raises: 3, limpers: 0, openerPosition: 'CO', lastRaiseTo: 200, heroRaised: true }
-    expect(getAdvice(situation({ position: 'CO', toCall: 125, preflop: facing }), null)!.action).toBe('allin')
+    const facing = {
+      facing: '4bet+' as const,
+      raises: 3,
+      limpers: 0,
+      openerPosition: 'CO',
+      lastRaiseTo: 200,
+      heroRaised: true,
+    }
+    expect(
+      getAdvice(situation({ position: 'CO', toCall: 125, preflop: facing }), null)!.action,
+    ).toBe('allin')
   })
 })
 
@@ -316,12 +400,18 @@ describe('advice: postflop', () => {
     expect(getAdvice(situation(flop), null)).toBeNull()
   })
   it('value bets a big favourite when checked to', () => {
-    const a = getAdvice(situation({ ...flop, toCall: 0, canCheck: true, pot: 60, currentBet: 0, minRaiseTo: 10 }), { equity: 0.85, outs: null })!
+    const a = getAdvice(
+      situation({ ...flop, toCall: 0, canCheck: true, pot: 60, currentBet: 0, minRaiseTo: 10 }),
+      { equity: 0.85, outs: null },
+    )!
     expect(a.action).toBe('bet')
     expect(a.amount).toBe(40)
   })
   it('checks a weak hand', () => {
-    const a = getAdvice(situation({ ...flop, toCall: 0, canCheck: true, pot: 60, currentBet: 0 }), { equity: 0.25, outs: null })!
+    const a = getAdvice(situation({ ...flop, toCall: 0, canCheck: true, pot: 60, currentBet: 0 }), {
+      equity: 0.25,
+      outs: null,
+    })!
     expect(a.action).toBe('check')
   })
   it('folds without the odds and calls with them', () => {
@@ -339,7 +429,18 @@ describe('advice: postflop', () => {
   })
   it('semi-bluffs strong draws', () => {
     const outs = findOuts(c('Ah5h'), c('Kh7h2d'))
-    const a = getAdvice(situation({ ...flop, hero: c('Ah5h'), board: c('Kh7h2d'), toCall: 0, canCheck: true, pot: 60, currentBet: 0 }), { equity: 0.45, outs })!
+    const a = getAdvice(
+      situation({
+        ...flop,
+        hero: c('Ah5h'),
+        board: c('Kh7h2d'),
+        toCall: 0,
+        canCheck: true,
+        pot: 60,
+        currentBet: 0,
+      }),
+      { equity: 0.45, outs },
+    )!
     expect(a.action).toBe('bet')
     expect(a.headline).toContain('semi-bluff')
     expect(a.why).toMatch(/outs/)
@@ -355,12 +456,24 @@ describe('potOdds', () => {
 })
 
 describe('grading', () => {
-  const adv: Advice = { action: 'raise', amount: 25, headline: 'Raise', why: 'Because it is strong. More.', acceptable: [], close: false, basis: 'chart' }
+  const adv: Advice = {
+    action: 'raise',
+    amount: 25,
+    headline: 'Raise',
+    why: 'Because it is strong. More.',
+    acceptable: [],
+    close: false,
+    basis: 'chart',
+  }
   it('matching action is great', () => {
-    expect(gradeDecision(adv, 'raise', 'preflop', { canCheck: false, amount: 25 }).grade).toBe('great')
+    expect(gradeDecision(adv, 'raise', 'preflop', { canCheck: false, amount: 25 }).grade).toBe(
+      'great',
+    )
   })
   it('oversized raise is only good', () => {
-    expect(gradeDecision(adv, 'raise', 'preflop', { canCheck: false, amount: 100 }).grade).toBe('good')
+    expect(gradeDecision(adv, 'raise', 'preflop', { canCheck: false, amount: 100 }).grade).toBe(
+      'good',
+    )
   })
   it('folding a raise-hand is a blunder', () => {
     expect(gradeDecision(adv, 'fold', 'preflop').grade).toBe('blunder')
@@ -382,7 +495,12 @@ describe('grading', () => {
 describe('buildSituation from a live game', () => {
   const game = (): GameState =>
     createGame({
-      seats: ['You', 'A', 'B', 'C', 'D', 'E'].map((n, i) => ({ id: `p${i}`, name: n, stack: 1000, isHuman: i === 0 })),
+      seats: ['You', 'A', 'B', 'C', 'D', 'E'].map((n, i) => ({
+        id: `p${i}`,
+        name: n,
+        stack: 1000,
+        isHuman: i === 0,
+      })),
       smallBlind: 5,
       bigBlind: 10,
       initialDealer: 3,
@@ -428,10 +546,27 @@ describe('buildSituation from a live game', () => {
 })
 
 describe('grading edge cases', () => {
-  const foldAdv: Advice = { action: 'fold', headline: 'Fold', why: 'Too weak.', acceptable: ['call'], close: true, basis: 'chart' }
-  const openAdv: Advice = { action: 'raise', amount: 25, headline: 'Raise to 2.5 BB', why: 'Strong.', acceptable: [], close: false, basis: 'chart' }
+  const foldAdv: Advice = {
+    action: 'fold',
+    headline: 'Fold',
+    why: 'Too weak.',
+    acceptable: ['call'],
+    close: true,
+    basis: 'chart',
+  }
+  const openAdv: Advice = {
+    action: 'raise',
+    amount: 25,
+    headline: 'Raise to 2.5 BB',
+    why: 'Strong.',
+    acceptable: [],
+    close: false,
+    basis: 'chart',
+  }
   it('an unsuggested all-in is never excused as a close spot', () => {
-    expect(gradeDecision(foldAdv, 'allin', 'preflop', { canCheck: false, amount: 1000 }).grade).toBe('blunder')
+    expect(
+      gradeDecision(foldAdv, 'allin', 'preflop', { canCheck: false, amount: 1000 }).grade,
+    ).toBe('blunder')
   })
   it('calling in a close fold/call spot is good', () => {
     expect(gradeDecision(foldAdv, 'call', 'preflop').grade).toBe('good')

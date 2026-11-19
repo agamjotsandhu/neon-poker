@@ -10,18 +10,46 @@ const RUNS = {
 }
 
 /** Draws a pixel suit inside an existing SVG at (x, y) with the given pixel size. */
-export function PixelSuitGlyph({ suit, x, y, px, fill }: { suit: Suit; x: number; y: number; px: number; fill?: string }) {
+export function PixelSuitGlyph({
+  suit,
+  x,
+  y,
+  px,
+  fill,
+}: {
+  suit: Suit
+  x: number
+  y: number
+  px: number
+  fill?: string
+}) {
   return (
     <g fill={fill ?? suitColor(suit)}>
       {RUNS[suit].map((r, i) => (
-        <rect key={i} x={x + r.x * px} y={y + r.y * px} width={r.w * px + 0.02} height={px + 0.02} />
+        <rect
+          key={i}
+          x={x + r.x * px}
+          y={y + r.y * px}
+          width={r.w * px + 0.02}
+          height={px + 0.02}
+        />
       ))}
     </g>
   )
 }
 
 /** Standalone inline suit icon (for text, outs lists, etc.). */
-export function PixelSuit({ suit, size = 12, className, color }: { suit: Suit; size?: number; className?: string; color?: string }) {
+export function PixelSuit({
+  suit,
+  size = 12,
+  className,
+  color,
+}: {
+  suit: Suit
+  size?: number
+  className?: string
+  color?: string
+}) {
   return (
     <svg
       width={size}

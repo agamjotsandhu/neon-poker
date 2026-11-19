@@ -30,14 +30,38 @@ interface Props {
   compact?: boolean
 }
 
-export function Seat({ player, avatar, tag, position, size, thinking, acting, isHero, winner, handLabel, stackDelay = 0, compact }: Props) {
+export function Seat({
+  player,
+  avatar,
+  tag,
+  position,
+  size,
+  thinking,
+  acting,
+  isHero,
+  winner,
+  handLabel,
+  stackDelay = 0,
+  compact,
+}: Props) {
   const last = player.lastAction
   const badge = last ? BADGE[last.type] : null
-  const amountText = last && (last.type === 'call' || last.type === 'bet' || last.type === 'raise') && last.amount > 0 ? ` ${last.amount.toLocaleString()}` : ''
+  const amountText =
+    last &&
+    (last.type === 'call' || last.type === 'bet' || last.type === 'raise') &&
+    last.amount > 0
+      ? ` ${last.amount.toLocaleString()}`
+      : ''
   const faded = player.folded || player.out
 
   return (
-    <div className={clsx('flex flex-col items-center transition-[opacity,filter]', faded && 'opacity-55 saturate-50')} style={cssDur(DUR.cssGlow)}>
+    <div
+      className={clsx(
+        'flex flex-col items-center transition-[opacity,filter]',
+        faded && 'opacity-55 saturate-50',
+      )}
+      style={cssDur(DUR.cssGlow)}
+    >
       {!isHero && (
         <div className="relative" style={{ width: size, height: size }}>
           <div
@@ -61,7 +85,11 @@ export function Seat({ player, avatar, tag, position, size, thinking, acting, is
               aria-label={`${player.name} is thinking`}
             >
               {[0, 1, 2].map((i) => (
-                <span key={i} className="h-1.5 w-1.5 animate-blink bg-night-900" style={{ animationDelay: `${i * 0.18}s` }} />
+                <span
+                  key={i}
+                  className="h-1.5 w-1.5 animate-blink bg-night-900"
+                  style={{ animationDelay: `${i * 0.18}s` }}
+                />
               ))}
             </motion.div>
           )}
@@ -80,7 +108,11 @@ export function Seat({ player, avatar, tag, position, size, thinking, acting, is
               className={clsx(
                 'absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-pixel px-2 py-0.5 font-display font-semibold tracking-wide ring-1',
                 compact ? 'text-[10px]' : 'text-xs',
-                handLabel ? (winner ? 'bg-neon-amber text-night-950 ring-neon-amber' : 'bg-night-800 text-haze-200 ring-haze-400/40') : badge!.cls,
+                handLabel
+                  ? winner
+                    ? 'bg-neon-amber text-night-950 ring-neon-amber'
+                    : 'bg-night-800 text-haze-200 ring-haze-400/40'
+                  : badge!.cls,
               )}
             >
               {handLabel ?? (
@@ -97,20 +129,41 @@ export function Seat({ player, avatar, tag, position, size, thinking, acting, is
       <div
         className={clsx(
           'glass relative mt-2 flex flex-col items-center rounded-panel px-3 pb-1 pt-1.5 shadow-panel ring-1 transition-shadow',
-          winner ? 'ring-neon-amber shadow-neon-amber' : acting ? 'ring-neon-cyan' : 'ring-haze-400/25',
+          winner
+            ? 'ring-neon-amber shadow-neon-amber'
+            : acting
+              ? 'ring-neon-cyan'
+              : 'ring-haze-400/25',
           compact ? 'min-w-[72px]' : 'min-w-[96px]',
         )}
       >
         <div className="flex items-center gap-1.5">
-          <span className={clsx('font-display font-semibold leading-none text-haze-100', compact ? 'text-xs' : 'text-sm')}>{player.name}</span>
+          <span
+            className={clsx(
+              'font-display font-semibold leading-none text-haze-100',
+              compact ? 'text-xs' : 'text-sm',
+            )}
+          >
+            {player.name}
+          </span>
           {position && (position === 'SB' || position === 'BB') && (
-            <span className="rounded-[2px] bg-night-600 px-1 font-display text-[9px] leading-tight text-haze-200">{position}</span>
+            <span className="rounded-[2px] bg-night-600 px-1 font-display text-[9px] leading-tight text-haze-200">
+              {position}
+            </span>
           )}
         </div>
-        <span className={clsx('num leading-tight', compact ? 'text-sm' : 'text-lg', player.allIn ? 'text-neon-amber' : 'text-haze-100')}>
+        <span
+          className={clsx(
+            'num leading-tight',
+            compact ? 'text-sm' : 'text-lg',
+            player.allIn ? 'text-neon-amber' : 'text-haze-100',
+          )}
+        >
           {player.out ? 'OUT' : <AnimatedNumber value={player.stack} delay={stackDelay} />}
         </span>
-        {tag && !compact && <span className="font-display text-[9px] tracking-widest text-haze-400">{tag}</span>}
+        {tag && !compact && (
+          <span className="font-display text-[9px] tracking-widest text-haze-400">{tag}</span>
+        )}
       </div>
     </div>
   )

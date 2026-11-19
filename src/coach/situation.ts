@@ -75,7 +75,10 @@ export function buildSituation(state: GameState, heroIndex: number): Situation {
 
   for (const e of state.events) {
     if (e.kind !== 'action') continue
-    const aggressive = e.action === 'raise' || e.action === 'bet' || (e.action === 'allin' && e.to > lastRaiseTo && e.street === 'preflop')
+    const aggressive =
+      e.action === 'raise' ||
+      e.action === 'bet' ||
+      (e.action === 'allin' && e.to > lastRaiseTo && e.street === 'preflop')
     if (e.street === 'preflop') {
       if (aggressive) {
         raises++
@@ -98,7 +101,15 @@ export function buildSituation(state: GameState, heroIndex: number): Situation {
   }
 
   const facing: PreflopFacing =
-    raises === 0 ? (limpers > 0 ? 'limped' : 'unopened') : raises === 1 ? 'raised' : raises === 2 ? '3bet' : '4bet+'
+    raises === 0
+      ? limpers > 0
+        ? 'limped'
+        : 'unopened'
+      : raises === 1
+        ? 'raised'
+        : raises === 2
+          ? '3bet'
+          : '4bet+'
 
   const opponents: OpponentInfo[] = state.players
     .map((p, index) => ({ p, index }))

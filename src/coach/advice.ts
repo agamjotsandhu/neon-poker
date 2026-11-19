@@ -101,7 +101,12 @@ function preflopAdvice(s: Situation): Advice {
 
   // Short stacks: push or fold.
   if (s.effectiveStackBB <= 12 && facing !== '4bet+') {
-    const pushWidth = facing === 'unopened' || facing === 'limped' ? (s.position === 'BTN' || s.position === 'SB' ? 0.35 : 0.2) : 0.1
+    const pushWidth =
+      facing === 'unopened' || facing === 'limped'
+        ? s.position === 'BTN' || s.position === 'SB'
+          ? 0.35
+          : 0.2
+        : 0.1
     if (top <= pushWidth) {
       return {
         action: 'allin',
@@ -114,7 +119,11 @@ function preflopAdvice(s: Situation): Advice {
         basis: 'push-fold',
       }
     }
-    return fold(s, `At ${Math.round(s.effectiveStackBB)} big blinds you're in shove-or-fold territory, and ${name} (top ${pct(top)}) isn't strong enough to risk your stack from ${posName}. Wait for a better spot.`, top > pushWidth * 1.3 ? [] : ['allin'])
+    return fold(
+      s,
+      `At ${Math.round(s.effectiveStackBB)} big blinds you're in shove-or-fold territory, and ${name} (top ${pct(top)}) isn't strong enough to risk your stack from ${posName}. Wait for a better spot.`,
+      top > pushWidth * 1.3 ? [] : ['allin'],
+    )
   }
 
   if (facing === 'unopened' || facing === 'limped') {
@@ -187,7 +196,9 @@ function preflopAdvice(s: Situation): Advice {
       }
     }
     const callable =
-      (s.position === 'BB' && (BB_DEFEND.has(hc) || top <= 0.35) && (!isEarly(opener) || top <= 0.3)) ||
+      (s.position === 'BB' &&
+        (BB_DEFEND.has(hc) || top <= 0.35) &&
+        (!isEarly(opener) || top <= 0.3)) ||
       (!oop && FLAT_RANGE.has(hc)) ||
       (s.position === 'SB' && FLAT_RANGE.has(hc) && top <= 0.12)
     if (callable && s.toCall <= s.heroStack) {
@@ -236,7 +247,11 @@ function preflopAdvice(s: Situation): Advice {
         basis: 'chart',
       }
     }
-    return fold(s, `A 3-bet range is strong (roughly the top 7% of hands). ${capital(name)} is too far behind it to keep investing, even getting ${odds.ratio}.`, top <= 0.12 ? ['call'] : [])
+    return fold(
+      s,
+      `A 3-bet range is strong (roughly the top 7% of hands). ${capital(name)} is too far behind it to keep investing, even getting ${odds.ratio}.`,
+      top <= 0.12 ? ['call'] : [],
+    )
   }
 
   // 4-bet or more
@@ -262,14 +277,32 @@ function preflopAdvice(s: Situation): Advice {
       basis: 'chart',
     }
   }
-  return fold(s, `Multiple raises before the flop mean a very narrow range: mostly QQ+ and AK. ${capital(name)} is a big underdog, so fold.`, [])
+  return fold(
+    s,
+    `Multiple raises before the flop mean a very narrow range: mostly QQ+ and AK. ${capital(name)} is a big underdog, so fold.`,
+    [],
+  )
 }
 
 function fold(s: Situation, why: string, acceptable: AdviceAction[]): Advice {
   if (s.canCheck) {
-    return { action: 'check', headline: 'Check', why: why + ' Checking is free, so never fold here.', acceptable: [], close: false, basis: 'chart' }
+    return {
+      action: 'check',
+      headline: 'Check',
+      why: why + ' Checking is free, so never fold here.',
+      acceptable: [],
+      close: false,
+      basis: 'chart',
+    }
   }
-  return { action: 'fold', headline: 'Fold', why, acceptable, close: acceptable.length > 0, basis: 'chart' }
+  return {
+    action: 'fold',
+    headline: 'Fold',
+    why,
+    acceptable,
+    close: acceptable.length > 0,
+    basis: 'chart',
+  }
 }
 
 /* ----------------------------------------------------------------- postflop */
@@ -282,12 +315,24 @@ function postflopAdvice(s: Situation, eq: EquityInfo): Advice {
   const multiway = s.opponents.length >= 2
   const bump = multiway ? 0.06 * (s.opponents.length - 1) : 0
   const pot = s.pot
-  const potLabel = (frac: number) => (frac <= 0.34 ? '⅓ pot' : frac <= 0.5 ? '½ pot' : frac <= 0.67 ? '⅔ pot' : frac <= 0.8 ? '¾ pot' : 'pot')
+  const potLabel = (frac: number) =>
+    frac <= 0.34
+      ? '⅓ pot'
+      : frac <= 0.5
+        ? '½ pot'
+        : frac <= 0.67
+          ? '⅔ pot'
+          : frac <= 0.8
+            ? '¾ pot'
+            : 'pot'
 
   const drawText = () => {
     if (!outs || nOuts === 0 || s.street === 'river') return ''
     const draws = outs.draws.filter((d) => d.outs > 0).map((d) => d.label.toLowerCase())
-    const rule = s.street === 'flop' ? `${nOuts} × 4 ≈ ${Math.min(100, nOuts * 4)}% by the river` : `${nOuts} × 2 ≈ ${nOuts * 2}% on the river`
+    const rule =
+      s.street === 'flop'
+        ? `${nOuts} × 4 ≈ ${Math.min(100, nOuts * 4)}% by the river`
+        : `${nOuts} × 2 ≈ ${nOuts * 2}% on the river`
     return ` You have ${nOuts} outs${draws.length ? ` (${draws.join(', ')})` : ''}: ${rule}.`
   }
 

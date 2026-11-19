@@ -80,7 +80,8 @@ export const SHOWDOWN = {
 } as const
 
 /** Hero hole-card flip after the deal lands (seconds). */
-export const heroFlipDelay = (dealDelaySec: number, round: number) => dealDelaySec + DUR.dealFlight + 0.35 + 0.15 * round
+export const heroFlipDelay = (dealDelaySec: number, round: number) =>
+  dealDelaySec + DUR.dealFlight + 0.35 + 0.15 * round
 
 /** Card deal delay (seconds) for the k-th card dealt this hand. */
 export const dealDelay = (k: number) => DUR.shuffle + k * DUR.dealStagger
@@ -113,7 +114,12 @@ export const popVariants: Variants = {
 
 export const screenVariants: Variants = {
   hidden: { opacity: 0, y: 16, filter: 'blur(6px)' },
-  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: DUR.screen, ease: EASE.out } },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: DUR.screen, ease: EASE.out },
+  },
   exit: { opacity: 0, y: -10, filter: 'blur(4px)', transition: { duration: DUR.fade } },
 }
 
@@ -140,7 +146,12 @@ export const riffle = (side: -1 | 1, i: number) => ({
   x: [0, side * 26, side * 26, 0, side * 18, 0],
   y: [0, -2 - i, -2 - i, 0, -1, 0],
   rotate: [0, side * 9, side * 9, 0, side * 6, 0],
-  transition: { duration: DUR.shuffle, ease: EASE.inOut, times: [0, 0.22, 0.4, 0.62, 0.8, 1], delay: i * 0.012 },
+  transition: {
+    duration: DUR.shuffle,
+    ease: EASE.inOut,
+    times: [0, 0.22, 0.4, 0.62, 0.8, 1],
+    delay: i * 0.012,
+  },
 })
 
 /** Gentle idle bob for decorative cards on the landing screen. */
@@ -150,4 +161,8 @@ export const floatLoop = (i: number) => ({
 })
 
 /** Landing fan: each card swings out from the stack. */
-export const fanIn = (i: number): Transition => ({ delay: 0.25 + i * 0.08, duration: DUR.panel * 1.6, ease: EASE.pop })
+export const fanIn = (i: number): Transition => ({
+  delay: 0.25 + i * 0.08,
+  duration: DUR.panel * 1.6,
+  ease: EASE.pop,
+})

@@ -22,7 +22,11 @@ export function resolveToken(name: string): string {
 export function rgbOf(name: string): [number, number, number] {
   const hex = resolveToken(name).replace('#', '')
   if (hex.length !== 6) return [128, 128, 128]
-  return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)]
+  return [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+  ]
 }
 
 export const rgba = (name: string, a: number) => {
@@ -37,4 +41,5 @@ export const mix = (a: string, b: string, t: number) => {
 }
 
 /** Suit ink colour as a CSS token reference. */
-export const suitColor = (s: 'c' | 'd' | 'h' | 's') => (s === 'h' || s === 'd' ? token('suit-red') : token('card-ink'))
+export const suitColor = (s: 'c' | 'd' | 'h' | 's') =>
+  s === 'h' || s === 'd' ? token('suit-red') : token('card-ink')

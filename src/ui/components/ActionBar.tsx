@@ -30,12 +30,18 @@ export function ActionBar() {
   const token = coach?.token ?? 0
   useEffect(() => {
     if (!legal) return
-    const suggested = advice && familyOf(advice.action) === 'aggressive' && advice.amount && mode === 'coach' ? advice.amount : legal.minRaiseTo
-    const id = requestAnimationFrame(() => setAmount(Math.max(legal.minRaiseTo, Math.min(legal.maxRaiseTo, suggested))))
+    const suggested =
+      advice && familyOf(advice.action) === 'aggressive' && advice.amount && mode === 'coach'
+        ? advice.amount
+        : legal.minRaiseTo
+    const id = requestAnimationFrame(() =>
+      setAmount(Math.max(legal.minRaiseTo, Math.min(legal.maxRaiseTo, suggested))),
+    )
     return () => cancelAnimationFrame(id)
   }, [token, legal, advice, mode])
 
-  const clampAmt = (v: number) => (legal ? Math.max(legal.minRaiseTo, Math.min(legal.maxRaiseTo, Math.round(v / unit) * unit)) : v)
+  const clampAmt = (v: number) =>
+    legal ? Math.max(legal.minRaiseTo, Math.min(legal.maxRaiseTo, Math.round(v / unit) * unit)) : v
 
   const sizeTo = (frac: number) => {
     if (!legal || !hero) return 0
@@ -68,7 +74,10 @@ export function ActionBar() {
   const disabled = !legal
   const allInAmount = legal?.maxRaiseTo ?? 0
   const isAllIn = legal ? amount >= legal.maxRaiseTo : false
-  const fill = legal && legal.maxRaiseTo > legal.minRaiseTo ? ((amount - legal.minRaiseTo) / (legal.maxRaiseTo - legal.minRaiseTo)) * 100 : 100
+  const fill =
+    legal && legal.maxRaiseTo > legal.minRaiseTo
+      ? ((amount - legal.minRaiseTo) / (legal.maxRaiseTo - legal.minRaiseTo)) * 100
+      : 100
   const raiseLabel = legal ? (isAllIn ? 'ALL-IN' : legal.isOpen ? 'BET' : 'RAISE TO') : 'RAISE'
   const fmt = (v: number) => v.toLocaleString()
 
@@ -76,7 +85,12 @@ export function ActionBar() {
     <div className="relative z-30 border-t border-haze-400/15 bg-night-950/85 px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-md sm:px-5">
       <div className="mx-auto flex max-w-5xl flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-5">
         {/* sizing */}
-        <div className={clsx('flex flex-1 items-center gap-2 transition-opacity', (disabled || !legal?.canRaise) && 'pointer-events-none opacity-35')}>
+        <div
+          className={clsx(
+            'flex flex-1 items-center gap-2 transition-opacity',
+            (disabled || !legal?.canRaise) && 'pointer-events-none opacity-35',
+          )}
+        >
           <div className="flex gap-1">
             {[
               ['½', 0.5],
@@ -147,7 +161,8 @@ export function ActionBar() {
           <span className="rounded-pixel bg-night-900/90 px-3 py-1.5 font-display text-sm text-haze-200 ring-1 ring-haze-400/25">
             {thinkingName ? (
               <>
-                <span className="text-neon-cyan">{thinkingName}</span> is thinking<span className="animate-blink">…</span>
+                <span className="text-neon-cyan">{thinkingName}</span> is thinking
+                <span className="animate-blink">…</span>
               </>
             ) : game?.phase === 'handComplete' ? (
               'Hand complete'
@@ -206,11 +221,15 @@ function ActionButton({
       )}
     >
       {recommended && !disabled && (
-        <span className="absolute right-1.5 top-1 rounded-[2px] bg-night-950/85 px-1 text-[9px] font-semibold tracking-wider text-neon-lime">COACH</span>
+        <span className="absolute right-1.5 top-1 rounded-[2px] bg-night-950/85 px-1 text-[9px] font-semibold tracking-wider text-neon-lime">
+          COACH
+        </span>
       )}
       <span className="text-base leading-none tracking-wide sm:text-lg">{label}</span>
       {sub && <span className="num mt-0.5 text-sm leading-none opacity-80">{sub}</span>}
-      <span className="absolute bottom-1 left-1.5 hidden text-[9px] font-medium opacity-60 sm:block">{hotkey}</span>
+      <span className="absolute bottom-1 left-1.5 hidden text-[9px] font-medium opacity-60 sm:block">
+        {hotkey}
+      </span>
     </motion.button>
   )
 }

@@ -54,7 +54,10 @@ export function describePreflop(hero: readonly Card[]): StrengthInfo {
     tier,
     tierTone: tone,
     percentile: 1 - top,
-    percentileLabel: top <= 0.5 ? `Top ${pct}% of starting hands` : `Bottom ${Math.max(1, 100 - pct)}% of starting hands`,
+    percentileLabel:
+      top <= 0.5
+        ? `Top ${pct}% of starting hands`
+        : `Bottom ${Math.max(1, 100 - pct)}% of starting hands`,
   }
 }
 
@@ -108,9 +111,17 @@ export function describePostflop(hero: readonly Card[], board: readonly Card[]):
         }
       } else if (heroRanks.includes(pr)) {
         const idx = uniqBoard.indexOf(pr)
-        const where = idx === 0 ? 'top pair' : idx === 1 ? 'second pair' : idx === uniqBoard.length - 1 ? 'bottom pair' : 'middle pair'
+        const where =
+          idx === 0
+            ? 'top pair'
+            : idx === 1
+              ? 'second pair'
+              : idx === uniqBoard.length - 1
+                ? 'bottom pair'
+                : 'middle pair'
         sentence = `You have a pair of ${RANK_PLURALS[pr]} (${where})`
-        if (kicker !== undefined) sentence += ` with ${article(RANK_NAMES[kicker])} ${RANK_NAMES[kicker]} kicker`
+        if (kicker !== undefined)
+          sentence += ` with ${article(RANK_NAMES[kicker])} ${RANK_NAMES[kicker]} kicker`
         short = where[0].toUpperCase() + where.slice(1)
       } else {
         sentence = `The board is paired (${RANK_PLURALS[pr]}); you're playing your ${RANK_NAMES[Math.max(...heroRanks)]} high`
@@ -137,7 +148,8 @@ export function describePostflop(hero: readonly Card[], board: readonly Card[]):
       } else if (heroRanks.includes(a)) {
         const kicker = heroRanks.find((r) => r !== a)
         sentence = `You have trips: three ${RANK_PLURALS[a]}`
-        if (kicker !== undefined) sentence += ` with ${article(RANK_NAMES[kicker])} ${RANK_NAMES[kicker]} kicker`
+        if (kicker !== undefined)
+          sentence += ` with ${article(RANK_NAMES[kicker])} ${RANK_NAMES[kicker]} kicker`
         short = 'Trips'
       } else {
         sentence = `Three ${RANK_PLURALS[a]} are on the board; everyone shares them`

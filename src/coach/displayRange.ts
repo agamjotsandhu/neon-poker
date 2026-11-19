@@ -23,7 +23,14 @@ export interface DisplayRange {
   caption: string
 }
 
-const POS: Record<string, string> = { UTG: 'UTG', HJ: 'Hijack', CO: 'Cutoff', BTN: 'Button', SB: 'Small Blind', BB: 'Big Blind' }
+const POS: Record<string, string> = {
+  UTG: 'UTG',
+  HJ: 'Hijack',
+  CO: 'Cutoff',
+  BTN: 'Button',
+  SB: 'Small Blind',
+  BB: 'Big Blind',
+}
 
 /** Which chart is relevant to the hero's current preflop decision (for the 13×13 grid). */
 export function displayRange(s: Situation): DisplayRange {
@@ -31,7 +38,12 @@ export function displayRange(s: Situation): DisplayRange {
   if (facing === 'unopened' || facing === 'limped') {
     if (s.position === 'BB') {
       const r = topRange(0.12)
-      return { raise: r, call: new Set(), title: 'Big Blind vs limpers', caption: `Raise the top ~12%; check everything else for free.` }
+      return {
+        raise: r,
+        call: new Set(),
+        title: 'Big Blind vs limpers',
+        caption: `Raise the top ~12%; check everything else for free.`,
+      }
     }
     const pos = (s.playersDealt === 2 && s.position === 'BTN' ? 'BTN' : s.position) as Position
     const r = rfiRange(pos)
@@ -55,7 +67,17 @@ export function displayRange(s: Situation): DisplayRange {
     }
   }
   if (facing === '3bet') {
-    return { raise: FOUR_BET_VALUE, call: CALL_THREE_BET, title: 'Facing a 3-bet', caption: 'Pink = 4-bet for value, cyan = call. Fold the rest of your opening range.' }
+    return {
+      raise: FOUR_BET_VALUE,
+      call: CALL_THREE_BET,
+      title: 'Facing a 3-bet',
+      caption: 'Pink = 4-bet for value, cyan = call. Fold the rest of your opening range.',
+    }
   }
-  return { raise: topRange(0.025), call: FOUR_BET_VALUE, title: 'Facing a 4-bet+', caption: 'Only the very top of your range continues.' }
+  return {
+    raise: topRange(0.025),
+    call: FOUR_BET_VALUE,
+    title: 'Facing a 4-bet+',
+    caption: 'Only the very top of your range continues.',
+  }
 }

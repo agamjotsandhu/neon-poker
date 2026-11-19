@@ -21,7 +21,13 @@ export function HandHistory() {
     <AnimatePresence>
       {open && (
         <>
-          <motion.div className="fixed inset-0 z-[55] bg-night-950/50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
+          <motion.div
+            className="fixed inset-0 z-[55] bg-night-950/50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setOpen(false)}
+          />
           <motion.aside
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
@@ -31,23 +37,36 @@ export function HandHistory() {
             aria-label="Hand history"
           >
             <div className="flex items-center justify-between border-b border-haze-400/15 p-4">
-              <div className="font-display text-lg font-bold tracking-wider text-neon-cyan">HAND HISTORY</div>
-              <button onClick={() => setOpen(false)} className="rounded-pixel p-1.5 text-haze-300 hover:bg-night-700" aria-label="Close history">
+              <div className="font-display text-lg font-bold tracking-wider text-neon-cyan">
+                HAND HISTORY
+              </div>
+              <button
+                onClick={() => setOpen(false)}
+                className="rounded-pixel p-1.5 text-haze-300 hover:bg-night-700"
+                aria-label="Close history"
+              >
                 <PixelIcon name="close" size={14} />
               </button>
             </div>
             {!record ? (
-              <p className="p-4 text-sm text-haze-300">Finish a hand to see its history and replay it here.</p>
+              <p className="p-4 text-sm text-haze-300">
+                Finish a hand to see its history and replay it here.
+              </p>
             ) : (
               <>
                 <div className="thin-scrollbar min-h-0 flex-1 overflow-y-auto p-4">
                   <div className="mb-3 rounded-panel bg-night-900/70 p-3 text-sm ring-1 ring-haze-400/10">
-                    <div className="mb-1.5 font-display text-[10px] uppercase tracking-[0.2em] text-haze-400">Hole cards (revealed)</div>
+                    <div className="mb-1.5 font-display text-[10px] uppercase tracking-[0.2em] text-haze-400">
+                      Hole cards (revealed)
+                    </div>
                     <ul className="space-y-0.5">
                       {record.final.players
                         .filter((p) => p.hole.length)
                         .map((p) => (
-                          <li key={p.id} className={clsx('flex justify-between', p.folded && 'text-haze-400')}>
+                          <li
+                            key={p.id}
+                            className={clsx('flex justify-between', p.folded && 'text-haze-400')}
+                          >
                             <span className="font-display">{p.isHuman ? 'You' : p.name}</span>
                             <span className="num tracking-wider">{prettyCards(p.hole)}</span>
                           </li>
@@ -63,7 +82,8 @@ export function HandHistory() {
                           e.kind === 'street' && 'mt-2 font-display text-neon-pink',
                           e.kind === 'win' && 'font-semibold text-neon-amber',
                           e.kind === 'start' && 'font-semibold text-haze-100',
-                          (e.kind === 'action' || e.kind === 'blind' || e.kind === 'refund') && 'text-haze-300',
+                          (e.kind === 'action' || e.kind === 'blind' || e.kind === 'refund') &&
+                            'text-haze-300',
                         )}
                       >
                         {describeEvent(e, record.final)}
@@ -72,10 +92,19 @@ export function HandHistory() {
                   </ol>
                   {record.decisions.length > 0 && (
                     <div className="mt-4 space-y-1.5">
-                      <div className="font-display text-[10px] uppercase tracking-[0.2em] text-haze-400">Your grades</div>
+                      <div className="font-display text-[10px] uppercase tracking-[0.2em] text-haze-400">
+                        Your grades
+                      </div>
                       {record.decisions.map((d, i) => (
                         <div key={i} className="flex items-center gap-2 text-sm">
-                          <span className={clsx('rounded-pixel px-1.5 font-display text-[10px] font-bold uppercase', GRADE_CLS[d.grade])}>{GRADE_LABEL[d.grade]}</span>
+                          <span
+                            className={clsx(
+                              'rounded-pixel px-1.5 font-display text-[10px] font-bold uppercase',
+                              GRADE_CLS[d.grade],
+                            )}
+                          >
+                            {GRADE_LABEL[d.grade]}
+                          </span>
                           <span className="truncate text-haze-200">{d.title}</span>
                         </div>
                       ))}
@@ -136,7 +165,11 @@ export function ReplayOverlay() {
             <div className="font-display text-lg font-bold tracking-wider text-neon-cyan">
               REPLAY <span className="text-haze-300">· HAND #{replay.record.handNumber}</span>
             </div>
-            <button onClick={close} className="rounded-pixel p-2 text-haze-300 hover:bg-night-700" aria-label="Close replay">
+            <button
+              onClick={close}
+              className="rounded-pixel p-2 text-haze-300 hover:bg-night-700"
+              aria-label="Close replay"
+            >
               <PixelIcon name="close" size={16} />
             </button>
           </div>
@@ -151,13 +184,25 @@ export function ReplayOverlay() {
           </div>
           <ReplayCaption />
           <div className="flex items-center justify-center gap-3 pb-[max(16px,env(safe-area-inset-bottom))] pt-2">
-            <button onClick={() => step(-1)} className="rounded-pixel bg-night-800 p-3 text-haze-200 ring-1 ring-haze-400/30 hover:bg-night-700" aria-label="Previous step">
+            <button
+              onClick={() => step(-1)}
+              className="rounded-pixel bg-night-800 p-3 text-haze-200 ring-1 ring-haze-400/30 hover:bg-night-700"
+              aria-label="Previous step"
+            >
               <PixelIcon name="prev" />
             </button>
-            <button onClick={toggle} className="rounded-pixel bg-neon-pink p-3 text-night-950 ring-1 ring-neon-pink" aria-label={replay.playing ? 'Pause' : 'Play'}>
+            <button
+              onClick={toggle}
+              className="rounded-pixel bg-neon-pink p-3 text-night-950 ring-1 ring-neon-pink"
+              aria-label={replay.playing ? 'Pause' : 'Play'}
+            >
               <PixelIcon name={replay.playing ? 'pause' : 'play'} />
             </button>
-            <button onClick={() => step(1)} className="rounded-pixel bg-night-800 p-3 text-haze-200 ring-1 ring-haze-400/30 hover:bg-night-700" aria-label="Next step">
+            <button
+              onClick={() => step(1)}
+              className="rounded-pixel bg-night-800 p-3 text-haze-200 ring-1 ring-haze-400/30 hover:bg-night-700"
+              aria-label="Next step"
+            >
               <PixelIcon name="next" />
             </button>
             <span className="num ml-2 text-sm text-haze-300">

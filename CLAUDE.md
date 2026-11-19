@@ -3,6 +3,7 @@
 Vite + React 19 + TypeScript (strict) + Tailwind v4 + motion + zustand.
 
 ## Architecture rules (obey these)
+
 ```
 src/
   engine/   pure TS, NO React: cards, deck, seeded shuffle, dealing, betting state machine, side pots, hand evaluator
@@ -12,6 +13,7 @@ src/
   ui/       React components only: Table, Seat, Card, CardBack, ChipStack, Pot, ActionBar, CoachPanel, HandHistory
   ui/motion.ts   ALL animation durations/easings/variants live here — never inline
 ```
+
 - engine/, coach/ and bots/ must never import React or anything from ui/ or store/.
 - The UI never mutates game state; it dispatches store actions, which call pure engine functions.
 - Design tokens (colours, radii, shadows, fonts) are defined once in the Tailwind `@theme` block in `src/index.css`. No hard-coded hex values in components. Canvas/SVG art reads colours from `src/ui/palette.ts`, which reads the same CSS variables.
@@ -22,11 +24,13 @@ src/
 - localStorage access is always wrapped in try/catch.
 
 ## Visual direction
+
 Neon-noir pixel art (see `Art Style/`): rainy night city, deep violet sky, magenta + cyan neon,
 glassy translucent table with a magenta neon rim, pixel-art avatars, chunky pixel display font
 (Pixelify Sans) with a clean sans body (Chakra Petch).
 
 ## Commands
+
 - `npm run dev` — dev server
 - `npm test` — vitest
 - `npm run lint` — eslint

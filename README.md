@@ -4,8 +4,8 @@
 
 ![Showdown on desktop](screenshots/desktop-5-showdown.png)
 
-| Coach panel | Phone (390×844) |
-|---|---|
+| Coach panel                                     | Phone (390×844)                               |
+| ----------------------------------------------- | --------------------------------------------- |
 | ![Coach](screenshots/desktop-4-coach-panel.png) | ![Mobile flop](screenshots/mobile-3-flop.png) |
 
 ## Features
@@ -15,7 +15,7 @@
   - Your hand in plain English ("You have a pair of Queens (top pair) with an Ace kicker"), with a strength tier and percentile.
   - **Preflop:** the standard chart for your spot (open / vs. raise / vs. 3-bet) on a 13×13 range grid, with your hand highlighted.
   - **Postflop:** Monte Carlo equity (8,000 run-outs in a Web Worker) against estimated opponent ranges, pot odds and the equity you need, an outs list with the rule of 2 & 4, and named draws (flush draw, OESD, gutshot…).
-  - A recommended action and size, with a 2–3 sentence explanation of *why*.
+  - A recommended action and size, with a 2–3 sentence explanation of _why_.
   - **Coach mode** shows advice before you act. **Quiz mode** has you act first and then grades the decision: Great / Good / Mistake / Blunder.
   - An end-of-hand summary covers the result, the showdown, each decision's grade and a hand score.
   - Session stats (hands, accuracy, average score) are saved to localStorage.
@@ -28,13 +28,13 @@
 
 ### Keyboard
 
-| Key | Action |
-|---|---|
-| `F` | Fold |
-| `C` | Check / Call |
-| `R` | Bet / Raise (slider amount) |
-| `Enter` | Deal next hand (from the summary) |
-| `←` `→` `Space` | Step / play the replay |
+| Key             | Action                            |
+| --------------- | --------------------------------- |
+| `F`             | Fold                              |
+| `C`             | Check / Call                      |
+| `R`             | Bet / Raise (slider amount)       |
+| `Enter`         | Deal next hand (from the summary) |
+| `←` `→` `Space` | Step / play the replay            |
 
 ## Run it
 
@@ -45,12 +45,12 @@ npm install
 npm run dev          # http://localhost:5173
 ```
 
-| Script | What it does |
-|---|---|
-| `npm run dev` | Vite dev server |
-| `npm test` | Vitest: engine, coach, bots, store and UI tests |
-| `npm run lint` | ESLint |
-| `npm run build` | Type-check + production build into `dist/` |
+| Script               | What it does                                                                                                                 |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`        | Vite dev server                                                                                                              |
+| `npm test`           | Vitest: engine, coach, bots, store and UI tests                                                                              |
+| `npm run lint`       | ESLint                                                                                                                       |
+| `npm run build`      | Type-check + production build into `dist/`                                                                                   |
 | `npm run screenshot` | Starts the dev server, plays hands in Chromium at 1440×900 and 390×844, saves `screenshots/`, and fails on any console error |
 
 `npx playwright install chromium` is needed once before `npm run screenshot`.

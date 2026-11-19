@@ -14,7 +14,11 @@ const BAYER4 = [
   [15, 7, 13, 5],
 ].map((r) => r.map((v) => (v + 0.5) / 16))
 
-const lerp = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
+const lerp = (a: RGB, b: RGB, t: number): RGB => [
+  a[0] + (b[0] - a[0]) * t,
+  a[1] + (b[1] - a[1]) * t,
+  a[2] + (b[2] - a[2]) * t,
+]
 
 export interface CityLayout {
   w: number
@@ -28,7 +32,12 @@ export interface CityLayout {
   signs: { x: number; y: number; w: number; h: number; color: RGB }[]
 }
 
-export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, seed = 7): CityLayout {
+export function renderCity(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  seed = 7,
+): CityLayout {
   const rng = createRng(seed)
   const img = ctx.createImageData(w, h)
   const d = img.data
@@ -69,7 +78,13 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
   }
 
   // 1. Sky: dithered vertical gradient
-  const bands: RGB[] = [C.skyTop, lerp(C.skyTop, C.skyMid, 0.5), C.skyMid, lerp(C.skyMid, C.skyGlow, 0.5), C.skyGlow]
+  const bands: RGB[] = [
+    C.skyTop,
+    lerp(C.skyTop, C.skyMid, 0.5),
+    C.skyMid,
+    lerp(C.skyMid, C.skyGlow, 0.5),
+    C.skyGlow,
+  ]
   for (let y = 0; y < horizon; y++) {
     const t = Math.pow(y / horizon, 1.15) * (bands.length - 1)
     for (let x = 0; x < w; x++) {
@@ -106,7 +121,7 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
     const cx = Math.round(rng() * w)
     const cw = Math.round(w * (0.25 + rng() * 0.3))
     for (let x = cx - cw / 2; x < cx + cw / 2; x++) {
-      const thick = 1 + ((Math.sin(x * 0.3 + k) + 1) * 1.2) | 0
+      const thick = (1 + (Math.sin(x * 0.3 + k) + 1) * 1.2) | 0
       for (let t = 0; t < thick; t++) put(x, cy + t, lerp(C.skyMid, C.skyGlow, 0.35), 0.75)
     }
   }
@@ -115,7 +130,16 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
   const signs: CityLayout['signs'] = []
 
   // 4. Building layers
-  const layer = (base: RGB, minH: number, maxH: number, minW: number, maxW: number, windowP: number, windowA: number, signP: number) => {
+  const layer = (
+    base: RGB,
+    minH: number,
+    maxH: number,
+    minW: number,
+    maxW: number,
+    windowP: number,
+    windowA: number,
+    signP: number,
+  ) => {
     let x = -Math.floor(rng() * 8)
     while (x < w) {
       const bw = Math.floor(minW + rng() * (maxW - minW))
@@ -139,7 +163,8 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
       const palette = [C.warm, C.warm, C.cool, C.pink]
       for (let wy = top + 2; wy < horizon - 2; wy += gy) {
         for (let wx = x + 1; wx < x + bw - 1; wx += gx) {
-          if (rng() < windowP) put(wx, wy, palette[Math.floor(rng() * palette.length)], windowA * (0.5 + rng() * 0.5))
+          if (rng() < windowP)
+            put(wx, wy, palette[Math.floor(rng() * palette.length)], windowA * (0.5 + rng() * 0.5))
         }
       }
       // vertical neon sign
@@ -189,7 +214,8 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
       }
     }
     // balcony lines
-    for (let wy = top + 8; wy < horizon; wy += 10) rect(x0, wy, nearW, 1, lerp(C.near, C.skyGlow, 0.3))
+    for (let wy = top + 8; wy < horizon; wy += 10)
+      rect(x0, wy, nearW, 1, lerp(C.near, C.skyGlow, 0.3))
     // big neon sign hanging off the building
     const sx = dir === 1 ? x0 + nearW - 2 : x0 - 5
     const sy = top + Math.round((horizon - top) * 0.35)
@@ -208,7 +234,8 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
       if (rng() < 0.7) put(sx + 2 + Math.floor(rng() * 3), yy + 2, col)
     }
     for (let yy = sy - 4; yy < sy + sh + 4; yy++)
-      for (let xx = sx - 4; xx < sx + 11; xx++) if (BAYER4[yy & 3][xx & 3] < 0.25) put(xx, yy, col, 0.3)
+      for (let xx = sx - 4; xx < sx + 11; xx++)
+        if (BAYER4[yy & 3][xx & 3] < 0.25) put(xx, yy, col, 0.3)
     signs.push({ x: sx, y: sy, w: 7, h: sh, color: col })
   }
   frame(0, 1)
@@ -229,7 +256,8 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
 
   // Horizon haze
   for (let y = horizon - 6; y < horizon; y++)
-    for (let x = 0; x < w; x++) if (BAYER4[y & 3][x & 3] < (y - (horizon - 6)) / 10) put(x, y, C.skyGlow, 0.35)
+    for (let x = 0; x < w; x++)
+      if (BAYER4[y & 3][x & 3] < (y - (horizon - 6)) / 10) put(x, y, C.skyGlow, 0.35)
 
   // 5. Wet street: mirrored, rippled, darkened reflection
   for (let y = horizon; y < h; y++) {
@@ -245,7 +273,8 @@ export function renderCity(ctx: CanvasRenderingContext2D, w: number, h: number, 
       put(x, y, darkened)
     }
     // horizontal wet sheen lines
-    if (dy % 7 === 3) for (let x = 0; x < w; x++) if (BAYER4[y & 3][x & 3] < 0.3) put(x, y, C.skyGlow, 0.18)
+    if (dy % 7 === 3)
+      for (let x = 0; x < w; x++) if (BAYER4[y & 3][x & 3] < 0.3) put(x, y, C.skyGlow, 0.18)
   }
   // Brighten reflected neon streaks (vertical smears under bright pixels)
   for (let y = horizon + 1; y < h; y++) {
@@ -281,7 +310,13 @@ export function makeDrops(w: number, h: number, n: number, seed = 3): Drop[] {
 }
 
 /** Draw one frame of animated details (rain, splashes, blinking beacons, twinkling stars, sign flicker). */
-export function drawOverlay(ctx: CanvasRenderingContext2D, layout: CityLayout, drops: Drop[], t: number, advance: boolean) {
+export function drawOverlay(
+  ctx: CanvasRenderingContext2D,
+  layout: CityLayout,
+  drops: Drop[],
+  t: number,
+  advance: boolean,
+) {
   const { w, h, horizon } = layout
   ctx.clearRect(0, 0, w, h)
   const rain = rgbOf('rain')
@@ -295,14 +330,18 @@ export function drawOverlay(ctx: CanvasRenderingContext2D, layout: CityLayout, d
         d.x = Math.random() * w * 1.2
       }
     }
-    for (let k = 0; k < d.len; k++) ctx.fillRect(Math.round(d.x - k * 0.25), Math.round(d.y - k), 1, 1)
+    for (let k = 0; k < d.len; k++)
+      ctx.fillRect(Math.round(d.x - k * 0.25), Math.round(d.y - k), 1, 1)
   }
   // splashes on the wet street
   ctx.fillStyle = `rgba(${rain[0]},${rain[1]},${rain[2]},0.4)`
   const splashes = Math.floor(w / 24)
   for (let i = 0; i < splashes; i++) {
     const sx = Math.floor(((Math.sin(i * 91.7 + Math.floor(t / 180) * 13.1) + 1) / 2) * w)
-    const sy = horizon + 4 + Math.floor(((Math.sin(i * 47.3 + Math.floor(t / 180) * 7.7) + 1) / 2) * (h - horizon - 6))
+    const sy =
+      horizon +
+      4 +
+      Math.floor(((Math.sin(i * 47.3 + Math.floor(t / 180) * 7.7) + 1) / 2) * (h - horizon - 6))
     if ((i + Math.floor(t / 90)) % 3 === 0) ctx.fillRect(sx - 1, sy, 3, 1)
   }
   // blinking beacons
