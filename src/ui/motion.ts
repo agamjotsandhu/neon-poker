@@ -23,7 +23,15 @@ export const DUR = {
   winGlow: 0.5,
   number: 0.6,
   screen: 0.5,
+  /** Opacity snap when a flying card appears */
+  appear: 0.1,
+  /** CSS transitions for glow / dim state changes */
+  cssGlow: 0.5,
+  cssRing: 0.3,
 } as const
+
+/** CSS transition-duration helpers (for Tailwind transition-* classes). */
+export const cssDur = (s: number) => ({ transitionDuration: `${s}s` })
 
 export const EASE = {
   out: [0.22, 1, 0.36, 1] as const,
@@ -54,6 +62,25 @@ export const PACE = {
   uncontestedSummaryDelay: 1600,
   replayStep: 1000,
 } as const
+
+/** Showdown choreography (seconds). */
+export const SHOWDOWN = {
+  /** When the winning five lift and glow. */
+  winLift: PACE.showdownReveal / 1000 - 0.4,
+  /** When pot chips start flying to the winner. */
+  awardShowdown: PACE.showdownReveal / 1000,
+  awardUncontested: DUR.collect + 0.1,
+  /** Extra gap between side-pot awards. */
+  awardStagger: 0.25,
+  /** Total award flight incl. hover + fade at the seat. */
+  awardFlight: DUR.potToWinner + 0.6,
+  awardTimes: [0, 0.15, 0.75, 1],
+  /** Bots' cards flip shortly after the reveal begins. */
+  botReveal: 0.2,
+} as const
+
+/** Hero hole-card flip after the deal lands (seconds). */
+export const heroFlipDelay = (dealDelaySec: number, round: number) => dealDelaySec + DUR.dealFlight + 0.35 + 0.15 * round
 
 /** Card deal delay (seconds) for the k-th card dealt this hand. */
 export const dealDelay = (k: number) => DUR.shuffle + k * DUR.dealStagger

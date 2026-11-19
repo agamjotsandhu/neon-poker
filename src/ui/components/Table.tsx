@@ -7,7 +7,7 @@ import type { GameState } from '../../engine/types'
 import type { SeatMeta } from '../../store/gameStore'
 import { computeGeometry, SEAT_MAP, type Geometry, type Pt } from '../geometry'
 import { useElementSize } from '../hooks/useElementSize'
-import { DUR, EASE, PACE, SPRING, dealDelay, hoverLift, riffle } from '../motion'
+import { DUR, EASE, SHOWDOWN, SPRING, dealDelay, heroFlipDelay, hoverLift, riffle } from '../motion'
 import { AnimatedNumber } from './AnimatedNumber'
 import { Card, CARD_RATIO } from './Card'
 import { CardBack } from './CardBack'
@@ -61,13 +61,19 @@ function TableInner({ state, heroIndex, seatMeta, thinkingId, heroTurn, handKey,
     for (const pot of outcome.pots) for (const id of pot.winners) winners.add(id)
     if (showdown) for (const id of winners) outcome.hands[id]?.best.forEach((c) => winCards.add(c))
   }
-  const awardDelay = outcome ? (outcome.uncontested ? DUR.collect + 0.1 : PACE.showdownReveal / 1000) : 0
+  const awardDelay = outcome ? (outcome.uncontested ? SHOWDOWN.awardUncontested : SHOWDOWN.awardShowdown) : 0
 
   const deckSeat = state.dealer >= 0 ? seatOf(state.dealer) : 3
-  const deckPos: Pt = {
-    x: g.seats[deckSeat].x + (g.center.x - g.seats[deckSeat].x) * 0.42,
-    y: g.seats[deckSeat].y + (g.center.y - g.seats[deckSeat].y) * 0.42,
-  }
+  // The deck sits in front of the dealer; when that's the hero it moves beside the hole cards.
+  const deckPos: Pt =
+    deckSeat === 0
+      ? g.portrait
+        ? { x: g.center.x, y: g.heroCards[0].y - g.heroCardW * CARD_RATIO * 0.5 - g.cardW * 0.5 }
+        : { x: g.heroCards[0].x - g.heroCardW * 1.35, y: g.heroCards[0].y - g.heroCardW * 0.45 }
+      : {
+          x: g.seats[deckSeat].x + (g.center.x - g.seats[deckSeat].x) * 0.42,
+          y: g.seats[deckSeat].y + (g.center.y - g.seats[deckSeat].y) * 0.42,
+        }
   const dealIndex = (pi: number, round: number) => {
     const j = state.dealOrder.indexOf(pi)
     return round * state.dealOrder.length + Math.max(0, j)
@@ -219,7 +225,7 @@ function TableInner({ state, heroIndex, seatMeta, thinkingId, heroTurn, handKey,
                   opacity: [0, 1, 1, 0],
                   scale: [0.9, 1.1, 1, 0.8],
                 }}
-                transition={{ duration: DUR.potToWinner + 0.6, delay: awardDelay + pi * 0.25, times: [0, 0.15, 0.75, 1], ease: EASE.inOut }}
+                transition={{ duration: SHOWDOWN.awardFlight, delay: awardDelay + pi * SHOWDOWN.awardStagger, times: [...SHOWDOWN.awardTimes], ease: EASE.inOut }}
               >
                 <div className="flex w-12 justify-center">
                   <ChipStack amount={amount} bb={bb} labelClassName="!bg-neon-amber !text-night-950" label={`+${amount.toLocaleString()}`} />
@@ -242,9 +248,9 @@ function TableInner({ state, heroIndex, seatMeta, thinkingId, heroTurn, handKey,
             className="absolute left-0 top-0 z-[12]"
             initial={replay ? false : { x: deckPos.x - g.cardW / 2, y: deckPos.y - boardCardH / 2, rotate: -12, opacity: 0, scale: 0.7 }}
             animate={{ x: p.x - g.cardW / 2, y: p.y - boardCardH / 2, rotate: 0, opacity: 1, scale: 1 }}
-            transition={{ ...SPRING.settle, delay: flightDelay, opacity: { duration: 0.1, delay: flightDelay } }}
+            transition={{ ...SPRING.settle, delay: flightDelay, opacity: { duration: DUR.appear, delay: flightDelay } }}
           >
-            <motion.div animate={{ y: hl === 'win' ? -12 : 0 }} transition={{ duration: DUR.winGlow, ease: EASE.pop, delay: hl ? PACE.showdownReveal / 1000 - 0.4 : 0 }}>
+            <motion.div animate={{ y: hl === 'win' ? -12 : 0 }} transition={{ duration: DUR.winGlow, ease: EASE.pop, delay: hl ? SHOWDOWN.winLift : 0 }}>
               <Card card={c} faceUp width={g.cardW} flipDelay={flipDelay} highlight={hl} />
             </motion.div>
           </motion.div>
@@ -280,18 +286,18 @@ function TableInner({ state, heroIndex, seatMeta, thinkingId, heroTurn, handKey,
                   scale: 0.5,
                   transition: { duration: DUR.fold, ease: EASE.in },
                 }}
-                transition={{ ...SPRING.settle, delay, opacity: { duration: 0.08, delay } }}
+                transition={{ ...SPRING.settle, delay, opacity: { duration: DUR.appear, delay } }}
               >
                 <motion.div
                   animate={{ y: hl === 'win' ? -14 : 0 }}
                   whileHover={isHero && live && !showdown ? hoverLift : undefined}
-                  transition={{ duration: DUR.winGlow, ease: EASE.pop, delay: hl ? PACE.showdownReveal / 1000 - 0.4 : 0 }}
+                  transition={{ duration: DUR.winGlow, ease: EASE.pop, delay: hl ? SHOWDOWN.winLift : 0 }}
                 >
                   <Card
                     card={c}
                     faceUp={faceUp}
                     width={w}
-                    flipDelay={isHero ? delay + DUR.dealFlight + 0.15 * r + (replay ? 0 : 0.35) : reveal && !replay ? 0.2 : 0}
+                    flipDelay={isHero ? (replay ? 0 : heroFlipDelay(delay, r)) : reveal && !replay ? SHOWDOWN.botReveal : 0}
                     highlight={hl}
                   />
                 </motion.div>

@@ -26,7 +26,8 @@ function Segmented<T extends string | number>({ value, options, onChange, label 
           aria-checked={value === o.v}
           onClick={() => onChange(o.v)}
           className={clsx(
-            'min-w-10 rounded-pixel px-2.5 py-1.5 font-display text-xs ring-1 transition',
+            'min-w-10 rounded-pixel px-2.5 py-1.5 text-xs ring-1 transition',
+            /^\d/.test(o.label) ? 'num' : 'font-display',
             value === o.v ? 'bg-neon-pink text-night-950 ring-neon-pink' : 'bg-night-800 text-haze-200 ring-haze-400/25 hover:bg-night-700',
           )}
         >

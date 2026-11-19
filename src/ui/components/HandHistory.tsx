@@ -61,8 +61,8 @@ export function HandHistory() {
                         className={clsx(
                           'text-sm leading-snug',
                           e.kind === 'street' && 'mt-2 font-display text-neon-pink',
-                          e.kind === 'win' && 'font-display text-neon-amber',
-                          e.kind === 'start' && 'font-display text-haze-200',
+                          e.kind === 'win' && 'font-semibold text-neon-amber',
+                          e.kind === 'start' && 'font-semibold text-haze-100',
                           (e.kind === 'action' || e.kind === 'blind' || e.kind === 'refund') && 'text-haze-300',
                         )}
                       >
@@ -124,7 +124,7 @@ export function ReplayOverlay() {
     <AnimatePresence>
       {replay && (
         <motion.div
-          className="fixed inset-0 z-[70] flex flex-col bg-night-950/80 backdrop-blur-md"
+          className="fixed inset-0 z-[70] flex flex-col bg-night-950/95 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -186,7 +186,7 @@ function ReplayCaption() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: DUR.fade }}
-          className="font-display text-base text-haze-100"
+          className="text-base font-medium text-haze-100"
         >
           {text.length ? text.slice(-3).join(' · ') : 'Dealing'}
         </motion.p>

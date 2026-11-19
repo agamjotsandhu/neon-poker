@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { motion } from 'motion/react'
 import type { Card as CardT } from '../../engine/cards'
 import { cardToString } from '../../engine/cards'
-import { flipTransition } from '../motion'
+import { cssDur, DUR, flipTransition } from '../motion'
 import { CardBackArt, CardFaceArt } from './CardArt'
 
 export const CARD_RATIO = 70 / 50
@@ -39,10 +39,11 @@ export function Card({ card, faceUp, width, flipDelay = 0, highlight = null, cla
         </div>
         <div
           className={clsx(
-            'absolute inset-0 rounded-card transition-[box-shadow,filter] duration-500 [backface-visibility:hidden] [transform:rotateY(180deg)]',
+            'absolute inset-0 rounded-card transition-[box-shadow,filter] [backface-visibility:hidden] [transform:rotateY(180deg)]',
             highlight === 'win' ? 'shadow-card-win' : 'shadow-card',
             highlight === 'dim' && 'brightness-[0.45] saturate-50',
           )}
+          style={cssDur(DUR.cssGlow)}
         >
           {card !== null && <CardFaceArt card={card} />}
         </div>

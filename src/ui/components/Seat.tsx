@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { AnimatePresence, motion } from 'motion/react'
 import type { AvatarSpec } from '../../bots/personalities'
 import type { ActionType, Player } from '../../engine/types'
-import { popVariants } from '../motion'
+import { cssDur, DUR, popVariants } from '../motion'
 import { AnimatedNumber } from './AnimatedNumber'
 import { PixelAvatar } from './PixelAvatar'
 
@@ -37,14 +37,15 @@ export function Seat({ player, avatar, tag, position, size, thinking, acting, is
   const faded = player.folded || player.out
 
   return (
-    <div className={clsx('flex flex-col items-center', faded && 'opacity-55 saturate-50 transition-[opacity,filter] duration-500')}>
+    <div className={clsx('flex flex-col items-center transition-[opacity,filter]', faded && 'opacity-55 saturate-50')} style={cssDur(DUR.cssGlow)}>
       {!isHero && (
         <div className="relative" style={{ width: size, height: size }}>
           <div
             className={clsx(
-              'absolute inset-0 rounded-panel transition-shadow duration-300',
+              'absolute inset-0 rounded-panel transition-shadow',
               winner ? 'shadow-neon-amber' : acting || thinking ? 'shadow-neon-cyan' : '',
             )}
+            style={cssDur(DUR.cssRing)}
           />
           <div className="pixel-corners absolute inset-0 overflow-hidden bg-gradient-to-b from-night-600 to-night-800">
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-neon-magenta/30 to-transparent" />

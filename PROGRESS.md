@@ -9,8 +9,8 @@
 - [x] Phase 5 — Bots (5 personalities, 0.6–1.5s think time)
 - [x] Phase 6 — Coach
 - [x] Phase 7 — Extras (landing, how-to, settings, history + replay, F/C/R keys)
-- [ ] Phase 8 — Visual QA
-- [ ] Phase 9 — Final
+- [x] Phase 8 — Visual QA (`npm run screenshot`, 1440×900 + 390×844, zero console errors; also checked 1280×720, 1024×640, 820×1180, reduced motion)
+- [x] Phase 9 — Final (lint, 138 tests, build all green; README)
 
 ## Decisions log
 - **Art direction follows `Art Style/`, not the prompt's green-felt/art-deco brief.** The user asked for the Art Style folder to be used. It shows a neon-noir pixel-art rainy city with a translucent, magenta-rimmed table. All art (city backdrop, avatars, cards, chips) is generated procedurally in code; the reference images are mood boards only and are not shipped.
@@ -27,3 +27,6 @@
 - `?seed=N` makes deals and bot decisions reproducible; `npm run screenshot` uses it.
 - Equity: 8,000 Monte Carlo run-outs postflop (3,000 preflop) in a Web Worker. Opponent ranges are estimated from preflop role (open range by position / 3-bet / call / limp) and narrowed to pairs+draws after postflop aggression.
 - Vendor code is split into react/motion chunks and the game/how-to screens are lazy-loaded.
+- Visual QA fixes: pixel-font numerals, coach recommendation moved above the fold, portrait bot-card placement, deck position when the hero deals, action-bar status scrim, landing text legibility, replay overlay opacity.
+- Grading: a "close spot" only excuses the neighbouring action (fold↔call, call↔raise). An unsuggested all-in is never excused, and shoving a deep stack when a standard raise was advised is graded as a sizing mistake.
+- Store integration tests drive real hands with fake timers (Workers fall back to main-thread equity in jsdom).

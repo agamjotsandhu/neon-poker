@@ -426,3 +426,19 @@ describe('buildSituation from a live game', () => {
     expect(r.equity).toBeLessThan(1)
   })
 })
+
+describe('grading edge cases', () => {
+  const foldAdv: Advice = { action: 'fold', headline: 'Fold', why: 'Too weak.', acceptable: ['call'], close: true, basis: 'chart' }
+  const openAdv: Advice = { action: 'raise', amount: 25, headline: 'Raise to 2.5 BB', why: 'Strong.', acceptable: [], close: false, basis: 'chart' }
+  it('an unsuggested all-in is never excused as a close spot', () => {
+    expect(gradeDecision(foldAdv, 'allin', 'preflop', { canCheck: false, amount: 1000 }).grade).toBe('blunder')
+  })
+  it('calling in a close fold/call spot is good', () => {
+    expect(gradeDecision(foldAdv, 'call', 'preflop').grade).toBe('good')
+  })
+  it('shoving 100 BB instead of a standard open is a sizing mistake', () => {
+    const f = gradeDecision(openAdv, 'allin', 'preflop', { canCheck: false, amount: 1000 })
+    expect(f.grade).toBe('mistake')
+    expect(f.title).toContain('too big')
+  })
+})

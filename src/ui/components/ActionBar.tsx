@@ -153,6 +153,10 @@ export function ActionBar() {
               'Hand complete'
             ) : hero?.folded ? (
               'You folded — watch how it plays out'
+            ) : hero?.allIn ? (
+              'You’re all-in — sweat it out'
+            ) : game?.phase === 'betting' ? (
+              'Waiting…'
             ) : (
               'Dealing…'
             )}

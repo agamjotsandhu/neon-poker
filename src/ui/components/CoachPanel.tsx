@@ -7,7 +7,7 @@ import { GRADE_CLS } from '../grades'
 import { handClass } from '../../coach/ranges'
 import { rankChar, suitChar, type Card } from '../../engine/cards'
 import { useGame, type CoachState, type Mode } from '../../store/gameStore'
-import { DUR, EASE, listItem, listStagger, panelVariants, sheetVariants, SPRING } from '../motion'
+import { cssDur, DUR, EASE, listItem, listStagger, panelVariants, sheetVariants, SPRING } from '../motion'
 import { PixelSuit } from './PixelSuit'
 import { RangeGrid } from './RangeGrid'
 
@@ -312,10 +312,11 @@ export function CoachPanel() {
       initial="hidden"
       animate="show"
       className={clsx(
-        'glass relative z-20 m-3 ml-0 flex w-[370px] shrink-0 flex-col overflow-hidden rounded-panel shadow-panel ring-1 transition-shadow duration-500 xl:w-[390px]',
+        'glass relative z-20 m-3 ml-0 flex w-[370px] shrink-0 flex-col overflow-hidden rounded-panel shadow-panel ring-1 transition-shadow xl:w-[390px]',
         heroTurn ? 'ring-neon-lime/60' : 'ring-haze-400/15',
       )}
       aria-label="Coach panel"
+      style={cssDur(DUR.cssGlow)}
     >
       <div className="border-b border-haze-400/15 p-4">
         <Header />

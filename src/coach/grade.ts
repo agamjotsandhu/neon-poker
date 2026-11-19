@@ -54,6 +54,16 @@ export function gradeDecision(
   }
 
   if (tookFamily === advFamily) {
+    // Shoving a deep stack when a normal raise was the plan risks everything to win little.
+    if (took === 'allin' && advice.action !== 'allin' && advice.amount && opts.amount && opts.amount > advice.amount * 4) {
+      return {
+        ...base,
+        grade: 'mistake',
+        points: 4,
+        title: `Right idea — far too big`,
+        message: `Being aggressive is correct here, but going all-in risks your whole stack when ${advice.headline.toLowerCase()} does the same job. Weaker hands fold to a shove and only better hands call, so the big size wins less and loses more.`,
+      }
+    }
     // Sizing nudge for aggressive actions
     let sizing = ''
     if (advFamily === 'aggressive' && advice.amount && opts.amount && advice.action !== 'allin' && took !== 'allin') {
@@ -71,7 +81,14 @@ export function gradeDecision(
   }
 
   const acceptableFamilies = new Set(advice.acceptable.map(familyOf))
-  if (acceptableFamilies.has(tookFamily) || advice.close) {
+  // "Close" spots only excuse the neighbouring action (fold↔call, call↔raise), and never an
+  // all-in the coach didn't suggest.
+  const neighbour =
+    (advFamily === 'fold' && tookFamily === 'passive') ||
+    (advFamily === 'passive' && tookFamily !== 'passive') ||
+    (advFamily === 'aggressive' && tookFamily === 'passive')
+  const reckless = took === 'allin' && !advice.acceptable.includes('allin')
+  if (!reckless && (acceptableFamilies.has(tookFamily) || (advice.close && neighbour))) {
     return {
       ...base,
       grade: 'good',
