@@ -1,12 +1,59 @@
-node_modules
-dist
-*.local
-.DS_Store
-__pycache__/
-*.pyc
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.tsbuildinfo
+.vite/
+
+# Tests & visual QA output
+coverage/
 test-results/
 playwright-report/
-.vite/
+blob-report/
+playwright/.cache/
+/screenshots/
+
+# Environment & secrets
 .env
 .env.*
+!.env.example
+*.local
+
+# Deployment
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Python (offline research prototypes)
+__pycache__/
+*.pyc
+.venv/
+
+# Local AI tooling
 .claude/settings.local.json
+.mcp.json
+
+# Non-runtime project material (kept locally, not shipped)
+/Art Style/
+/research/
+/data/
+/engine/
+PROGRESS.md
+prompt.md
+linkedin-post-context.md
+scripts/peek*.mjs
