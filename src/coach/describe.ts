@@ -85,7 +85,7 @@ export function describePostflop(hero: readonly Card[], board: readonly Card[]):
   const boardRanks = board.map(rankOf).sort((x, y) => y - x)
   const usesHole = res.best.some((card) => hero.includes(card))
   const pocketPair = heroRanks[0] === heroRanks[1]
-  let sentence = `You have ${res.name.toLowerCase()}`
+  let sentence: string
   let short = res.name.split(',')[0]
 
   switch (res.category) {
