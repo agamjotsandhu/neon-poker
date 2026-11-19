@@ -1,0 +1,12 @@
+node_modules
+dist
+*.local
+.DS_Store
+__pycache__/
+*.pyc
+test-results/
+playwright-report/
+.vite/
+.env
+.env.*
+.claude/settings.local.json
