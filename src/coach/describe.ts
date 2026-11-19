@@ -54,7 +54,7 @@ export function describePreflop(hero: readonly Card[]): StrengthInfo {
     tier,
     tierTone: tone,
     percentile: 1 - top,
-    percentileLabel: `Top ${pct}% of starting hands`,
+    percentileLabel: top <= 0.5 ? `Top ${pct}% of starting hands` : `Bottom ${Math.max(1, 100 - pct)}% of starting hands`,
   }
 }
 

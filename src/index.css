@@ -9,6 +9,8 @@
 @theme static {
   --font-display: 'Pixelify Sans', ui-monospace, monospace;
   --font-body: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif;
+  /* numerals: Pixelify's 5 reads like an S, so chip counts use the body face */
+  --font-num: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif;
 
   /* night sky → deep violet surfaces */
   --color-night-950: #0a0414;
@@ -142,6 +144,12 @@
       100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
       4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)
     );
+  }
+  .num {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0;
   }
   .pixelated {
     image-rendering: pixelated;
